@@ -1,0 +1,116 @@
+# Minimal shepherd configuration — a generic project bootstrap.
+#
+# This is the smallest viable shepherd.toml. It assumes a Rust project
+# with the framework's mod-10 sprint convention and three canonical gates.
+#
+# For a fully-fleshed-out config, see ../rust-service/shepherd.toml.
+# For the schema, see ../../docs/configuration.md.
+
+[project]
+name     = "myfi"
+language = "python"   # Python3/poetry toolkit is the testable surface; the plugin body is markdown
+
+[branching]
+patch_branch_pattern  = "v{X}.{Y}.{Z}"
+sprint_branch_pattern = "v{X}.{Y}.{Z}-dev.{N}"
+# Filesystem-slug forms (v5.1.1+) — dots collapsed for filename safety.
+# Branches keep dots (git-valid); seed/plan filenames use slug form.
+patch_slug_pattern    = "v{X}{Y}{Z}"
+sprint_slug_pattern   = "v{X}{Y}{Z}-dev{N}"
+sprints_per_patch     = 8    # v0.0.0 ships the whole vision as one arc (dev.0..dev.5, headroom to 8)
+main_branch           = "main"
+release_tag_pattern   = "v{X}.{Y}.{Z}"
+
+[gates]
+# Python/poetry toolkit lives at services/toolkit/ (locked in the v0.0.0 seed).
+# Gates go green once dev.0 scaffolds it; they are the foundation sprint's acceptance.
+check  = "poetry -C services/toolkit run pytest -q"
+lint   = "poetry -C services/toolkit run ruff check ."
+format = "poetry -C services/toolkit run ruff format --check ."
+
+[dups]
+# Field-shape similar-struct detection (shctx dups, #157) — catches the
+# renamed-shadow duplicate that name-matching dedup misses. Defaults shown;
+# uncomment only to change. Keys are dups_*-prefixed (cfg_get is section-agnostic).
+# dups_hook        = "warn"   # PreToolUse(Write|Edit): off | warn (default) | block
+# dups_threshold   = 0.7      # cluster/check similarity floor
+# dups_block       = 0.85     # hook block threshold
+# dups_name_weight = 0.5      # field-NAME Jaccard weight vs typed-pair Jaccard
+# dups_min_fields  = 2        # ignore shapes below N fields
+
+[paths]
+# Match the shctx namespace your project uses. Default (v5.0.0+) is .shepherd/.
+# If your project was initialized with `shctx init --artifacts`, use .artifacts/ here.
+# Running `shctx doctor` will report a conflict if these paths diverge from the
+# active shctx namespace.
+plans   = ".shepherd/docs/plans"
+reports = ".shepherd/docs/reports"
+docs    = ".shepherd/docs"
+ctx     = ".shepherd/ctx"
+
+[skills]
+mandatory = ["code-style"]
+
+[skills.by_domain]
+python = ["python", "finance"]
+
+[skills.detection]
+python   = ["**/*.py", "**/pyproject.toml"]
+shell    = ["**/*.sh"]
+markdown = ["**/*.md"]
+
+[mcp]
+github = true
+
+[cli]
+gh = true
+
+[ledger]
+phase_0_full_ledger      = true
+chronic_threshold_patches = 2
+
+[release]
+driver = "operator"
+# devlast_guard = "block"     # block (default) | warn | off — refuse to cut dev.{sprints_per_patch}
+
+[autorun]
+# Unattended sequential walk (/shepherd:spawn --scope patch | --auto). Defaults
+# below reproduce pre-v6.1.5 behavior — uncomment only to change it.
+# min_grade          = "B"        # letter-grade floor for continuing the walk
+# on_grade_floor     = "abort"    # abort (default) | pause | continue
+# inter_sprint_pause = "brief"    # brief (default ~5s window) | signoff | none
+
+[spawn]
+# max_parallel       = 4          # int 2..N — upper bound on --parallel fan-out (default 4)
+# dashboard_cadence  = "3m"       # default interval for `/shepherd:loop <c> shctx dash`
+
+[close]
+# Authorized supervised self-heal during a post-close soak (v6.1.5 #148). Default
+# OFF (detection-only). Requires "on" + a `close: autonomous-sentinel` seed
+# declaration + a complete `sentinel_rails` block before any auto-remediation.
+# autonomous_sentinel = "off"
+
+[discovery]
+# Auto-detect Claude Code plugins/skills present in the environment and surface
+# them (ephemeral, distinct from the curated toolkit.json). "off" disables.
+auto_capabilities = "on"
+
+[tmux]
+# pane_cleanup = "on"         # on (default) | off — reap closed-teammate panes at SessionEnd
+
+[hooks]
+on_every_dispatch = ["code-style"]
+
+[compaction]
+# Snapshot drive-state before every compaction event (on by default).
+# Disable with "off" if you do not use /shepherd:spawn or long-running sprints.
+# precompact_snapshot = "on"   # on (default) | off
+# snapshot_retention  = 5      # keep N most-recent snapshots
+
+[focus]
+# Re-inject the latest snapshot as additionalContext after compaction.
+# Controls both the SessionStart(compact) path and the UserPromptSubmit fallback.
+# rehydrate        = "on"   # on (default) | off
+# loop_max_default = 8      # default max_iterations for FOCUS-LOOP (Pattern 6)
+# heartbeat_interval = ""   # v6.2.2 — deterministic wall-clock re-anchor in a long stretch (native /loop)
+# heartbeat_actions  = 20   # v6.2.2 — soft self-prompt: re-anchor after ~N actions (0 disables)
