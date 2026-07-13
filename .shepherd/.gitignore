@@ -1,0 +1,37 @@
+# shepherd context registry — gitignored by default.
+# Remove these lines to commit the registry to the repo.
+#
+# New standard DB name (v6.1.0+):
+shepherd.db
+shepherd.db-journal
+shepherd.db-wal
+shepherd.db-shm
+# Legacy DB name (retained for back-compat — do not remove):
+root.db
+root.db-journal
+root.db-wal
+root.db-shm
+shepherd.lock
+project.json
+
+# Transient runtime dirs (never tracked).
+tmp/
+logs/
+cache/
+runs/
+dispatch/
+discoveries/
+insights/
+pauses/
+
+# Secret hygiene — never commit credentials/keys from the work dir.
+*.env
+.env
+*.key
+*.pem
+*.secret
+secrets/
+credentials*
+
+# Tracked subtrees stay tracked:
+# docs/ styles/ profiles/ ctx/ archive/ scripts/ templates/ types/ toolkit.json
