@@ -1,0 +1,18 @@
+{
+  "name": "myfi",
+  "version": "0.0.0",
+  "description": "An all-in-one financial plugin with a wall-street grade financial planner alongside a custom toolkit and supported with various related skills ensuring a QUANT level understanding of market conditions.",
+  "author": {
+    "name": "FL03",
+    "email": "joe@pzzld.org",
+    "url": "https://github.com/FL03"
+  },
+  "homepage": "https://github.com/FL03/myfi",
+  "repository": "https://github.com/FL03/myfi",
+  "license": "Apache-2.0",
+  "keywords": [
+    "finance",
+    "personal",
+    "financial-planner"
+  ]
+}

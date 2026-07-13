@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "fl03",
+  "description": "An all-in-one financial plugin with a wall-street grade financial planner alongside a custom toolkit and supported with various related skills ensuring a QUANT level understanding of market conditions.",
+  "owner": {
+    "name": "FL03",
+    "email": "joe@pzzld.org",
+    "url": "https://github.com/FL03"
+  },
+  "homepage": "https://github.com/FL03/myfi",
+  "repository": "https://github.com/FL03/myfi",
+  "plugins": [
+    {
+      "name": "myfi",
+      "version": "0.0.0",
+      "description": "An all-in-one financial plugin with a wall-street grade financial planner alongside a custom toolkit and supported with various related skills ensuring a QUANT level understanding of market conditions.",
+      "category": "development",
+      "source": {
+        "source": "github",
+        "repo": "FL03/myfi"
+      },
+      "homepage": "https://github.com/FL03/myfi"
+    }
+  ],
+  "version": "0.0.0"
+}
