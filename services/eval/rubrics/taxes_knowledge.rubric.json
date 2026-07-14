@@ -1,0 +1,12 @@
+{
+  "kind": "taxes_knowledge",
+  "subject": "A tax-workflow output produced under skills/taxes/SKILL.md for a /myfi:taxes run: a tax-situation summary, form checklist, or optimization recommendation for one client's tax year.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "workflow-completeness", "weight": 2, "desc": "Covers the workflow end to end: gathers activity, classifies income/gains, routes to the correct forms, computes an estimate, and flags a filing deadline, not just one isolated step." },
+    { "key": "doc-grounded",          "weight": 2, "desc": "Cites specific IRS forms/publications (Form 8949, Schedule D, 1099-B/DIV/INT, Publication 550/590-A/590-B) and real numeric thresholds (e.g. the $3,000 loss cap, 30-day wash-sale window) rather than invented figures." },
+    { "key": "filing-actionable",     "weight": 1, "desc": "A client or preparer could act on it directly: concrete forms, a concrete estimate, a concrete deadline, not vague 'you may owe some tax' hand-waving." }
+  ],
+  "guidance": "Reward a complete, form-grounded workflow a preparer could act on immediately, with real IRS forms/publications and real thresholds cited. Penalize a single-step answer, an invented numeric threshold, or vague advice with no concrete form, estimate, or deadline."
+}

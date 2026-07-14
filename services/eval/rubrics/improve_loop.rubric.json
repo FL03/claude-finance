@@ -1,0 +1,12 @@
+{
+  "kind": "improve_loop",
+  "subject": "An agent's description or use of the myfi IMPROVE self-improvement loop, e.g. a close-time harvest note, a dispatch brief's opening context, or a report that acted on a stored prior.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "names-the-loop",           "weight": 2, "desc": "Correctly names all four verbs in order (harvest, store, inject, cite) as a real mechanism, not a vague 'we learn from mistakes' paraphrase." },
+    { "key": "actionable-harvest",       "weight": 2, "desc": "The harvest step is concrete and bounded, tied to specific audit_findings/discovery_findings severity (HIGH/CRITICAL only), not 'harvest everything' or a made-up source." },
+    { "key": "cites-prior-mechanism",    "weight": 1, "desc": "States the storage/citation mechanism concretely: mem_entries(kind='prior') in the per-project myctx DB, dedup-by-title, and citing prior:<mem_id> when a decision acts on one." }
+  ],
+  "guidance": "Reward a description that names all four verbs as a real, ordered mechanism grounded in the myctx mem_entries/audit_findings/discovery_findings tables, with a bounded (HIGH/CRITICAL-only, deduped) harvest step and an explicit prior:<mem_id> citation discipline. Penalize a vague 'the loop learns over time' paraphrase, an unbounded 'store everything' harvest, or any answer that never names how a stored lesson gets cited back."
+}

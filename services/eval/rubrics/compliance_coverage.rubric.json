@@ -1,0 +1,12 @@
+{
+  "kind": "compliance_coverage",
+  "subject": "A compliance/regulatory review note produced by @auditor's adversarial pass over another agent's finance output, informed by skills/compliance/SKILL.md.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "names-the-regulatory-scope", "weight": 2, "desc": "Names the concrete regulatory baseline being checked against (e.g. fiduciary vs Reg BI standard of care, disclosure, suitability, KYC/AML, MNPI/insider trading, manipulation, marketing rule, recordkeeping) rather than a generic 'checked for compliance issues'." },
+    { "key": "actionable-for-auditor",     "weight": 2, "desc": "Each finding cites the specific claim it applies to and states a falsification condition (Hypothesis+Falsification+Confidence) an auditor could act on, not an unfalsifiable opinion." },
+    { "key": "jurisdiction-honest",        "weight": 1, "desc": "States the assumed jurisdiction/scope (US-federal-baseline) plainly, never asserts legal certainty, and flags out-of-scope territory (state law, cross-border, ERISA specifics) as an open question rather than silently clearing it." }
+  ],
+  "guidance": "Reward a review that names specific regulatory concerns from the checklist, ties each finding to a falsifiable claim, and is explicit and honest about the jurisdiction/scope it operated within. Penalize a generic 'looks compliant' verdict, an unfalsifiable finding, or any claim of definitive legal certainty outside the stated US-federal baseline."
+}
