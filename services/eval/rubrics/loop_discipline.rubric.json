@@ -1,0 +1,12 @@
+{
+  "kind": "loop_discipline",
+  "subject": "A description of, or excerpt from, the myfi harness loop templates (skills/myfi/references/loop-templates.md) or a report/brief that invokes one of its bounded loops (ADVISOR-DISPATCH-CONVERGE, QUANT-MODEL-CONVERGE, WORKER-DELIVERABLE-CONVERGE, AUDITOR-GATE-REDO, DESIGNER-CHECKLIST-CONVERGE) for the myfi six-agent flock.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "names-the-cap", "weight": 2, "desc": "States a concrete numeric loop cap (REDO cap 3, or a template's default --max) as a real ceiling, not a vague 'we don't loop forever' paraphrase, and ties it to the flock-wide REDO cap 3 that agents/auditor.md enforces." },
+    { "key": "measurable-predicate", "weight": 2, "desc": "Names a structured, checkable termination predicate (new_findings: true|false, a PASS/REDO verdict, a checklist all reading ok) rather than an unfalsifiable prose condition like 'looks done' or 'good enough'." },
+    { "key": "role-shaped", "weight": 1, "desc": "Correctly binds the loop to a specific myfi flock role (advisor, quant, worker, auditor, or designer) and its actual gate (auditor verdict, brief [FORMAT], final-edit checklist) rather than a generic, role-agnostic description that could apply to any agent." }
+  ],
+  "guidance": "Reward a description that names a concrete numeric cap tied to the flock-wide REDO cap 3, a structured true|false or PASS|REDO termination signal, and the specific myfi agent + gate the loop drives to convergence. Penalize an unbounded description ('loop until it's right'), a prose-only termination condition with no structured field, cap-exceeded framed as a silent stop instead of an escalation/halt, or a loop description that never says which flock role owns the iteration."
+}
