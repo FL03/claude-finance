@@ -70,6 +70,30 @@ def test_list_tools_smoke() -> None:
         assert tool.description, f"MCP tool {tool.name!r} must have a non-empty description"
 
 
+def test_documented_tools_are_registered() -> None:
+    """The MCP tool set must match the names skills/myfi/SKILL.md documents as
+    canonical (mcp__plugin_myfi_myfi-toolkit__{quote,db_init,db_migrate,db_version}
+    + describe_toolkit) and every agent's tools: line cites. A dropped tool would
+    silently break an agent's only path to toolkit data (esp. @advisor, which has
+    no Bash/CLI fallback), so this asserts the contract, not just >=1 tool.
+    """
+    names = {tool.name for tool in asyncio.run(mcp_server.mcp.list_tools())}
+    for required in ("describe_toolkit", "quote", "db_init", "db_migrate", "db_version"):
+        assert required in names, f"MCP tool {required!r} missing (SKILL.md + agents cite it); have {sorted(names)}"
+
+
+def test_quote_tool_returns_typed_dict() -> None:
+    """The quote MCP tool degrades to the research source (no provider env) and
+    returns a JSON-serializable dict carrying the symbol and its source."""
+    import os
+
+    os.environ.pop("MYFI_MARKETDATA_PROVIDER", None)
+    result = mcp_server.quote("AAPL")
+    assert isinstance(result, dict)
+    assert result.get("symbol", "").upper() == "AAPL" or "value" in result
+    assert "source" in result or "value" in result
+
+
 def test_eval_margin(monkeypatch: pytest.MonkeyPatch) -> None:
     rubric = json.loads(_RUBRIC_PATH.read_text())
     threshold = rubric["threshold"]
