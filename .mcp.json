@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "myfi-toolkit": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/bin/myfi-mcp",
+      "args": []
+    }
+  }
+}
