@@ -7,8 +7,8 @@
     "email": "joe@pzzld.org",
     "url": "https://github.com/FL03"
   },
-  "homepage": "https://github.com/FL03/myfi",
-  "repository": "https://github.com/FL03/myfi",
+  "homepage": "https://github.com/FL03/claude-finance",
+  "repository": "https://github.com/FL03/claude-finance",
   "plugins": [
     {
       "name": "myfi",
@@ -17,9 +17,9 @@
       "category": "development",
       "source": {
         "source": "github",
-        "repo": "FL03/myfi"
+        "repo": "FL03/claude-finance"
       },
-      "homepage": "https://github.com/FL03/myfi"
+      "homepage": "https://github.com/FL03/claude-finance"
     }
   ],
   "version": "0.0.1"
