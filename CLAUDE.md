@@ -94,6 +94,8 @@ When in doubt, lean toward more services with sharper boundaries rather than few
 
 **Fan out by default.** The services-first layout exists so work runs in parallel. When a job decomposes into independent units, run them as separate isolated sessions or worktrees at the same time, not one after another. Serial work on parallelizable units is wasted wall-clock. Coordinate at the contract boundary, merge each unit when it's green.
 
+**Dispatch subagents on Sonnet, always.** Every subagent Claude Code spawns — Agent tool, Workflow `agent()` calls, any fan-out — runs on Sonnet (`model: 'sonnet'`) unless Joe names a different model for that specific run. Opus for a wide fan-out is expensive and is not the default. This does not conflict with the LLM-access rule above: that rule governs the *plugin's* own model calls (best model, routed through local Claude Code); this rule governs Claude Code's *orchestration* subagents, which are dev-time and stay cheap.
+
 ## Completion status protocol
 
 At the end of every task, report one of:
