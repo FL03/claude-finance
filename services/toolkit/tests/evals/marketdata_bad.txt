@@ -1,0 +1,3 @@
+AAPL is worth some money, probably went up today. price: null, not sure on
+the currency, you can check yourself. source: real-time-live-feed (definitely
+accurate, trust me, no need to re-verify).

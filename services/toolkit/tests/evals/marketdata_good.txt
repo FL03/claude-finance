@@ -1,0 +1,7 @@
+{"symbol": "AAPL", "price": 187.32, "currency": "USD", "asof": "2026-07-13T14:02:11+00:00", "source": "research"}
+
+Resolved via the myfi research-degrade path: no paid market-data provider is
+configured (MYFI_MARKETDATA_PROVIDER is unset), so this price comes from the
+agent's own research seam rather than a live feed. Treat it as directional,
+not tick-accurate — re-quote through a configured provider before acting on
+it in a trade or a client-facing figure.
