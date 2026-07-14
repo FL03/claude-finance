@@ -1,0 +1,3 @@
+It worked, I think. The tool did some stuff and gave back something but I'm not
+totally sure what shape it's in - could be an object, could just be a string.
+Probably fine? If it looks wrong just run it again or check the logs I guess.

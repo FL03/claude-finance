@@ -1,0 +1,12 @@
+{
+  "kind": "toolkit",
+  "subject": "A response returned by an myfi-toolkit CLI subcommand or MCP tool call — the raw text/JSON an agent receives back after invoking a toolkit capability (e.g. describe_toolkit, stats, quote).",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "tool-description-usability", "weight": 2, "desc": "The tool's name/description/output tells an agent, without extra guessing, what it does and when to call it." },
+    { "key": "output-parseability",         "weight": 2, "desc": "Output is structured (JSON or clearly delimited text) an agent can parse programmatically, not free-form prose." },
+    { "key": "agent-actionability",         "weight": 1, "desc": "Output gives the agent enough to act on immediately (a concrete value, list, or next step) rather than forcing another round trip." }
+  ],
+  "guidance": "Reward toolkit responses that are self-describing, structured, and immediately usable by a calling agent. Penalize vague prose, missing fields, or output that forces the agent to guess the schema."
+}

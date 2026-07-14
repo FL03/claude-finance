@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# bin/myfi-eval — root wrapper for services/eval/eval.py.
+#
+# Thin dispatcher: no logic of its own beyond resolving the repo root. The
+# eval harness shells to services/llm/llm.py for the actual judge call — see
+# services/eval/README.md for the two-lane (gate/live) discipline.
+set -eu -o pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$HERE/.." && pwd)"
+
+PYTHON="${MYFI_PYTHON:-python3}"
+exec "$PYTHON" "$ROOT/services/eval/eval.py" "$@"

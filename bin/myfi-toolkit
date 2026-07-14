@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# bin/myfi-toolkit — thin wrapper for the myfi_toolkit CLI console script.
+#
+# Prefers `poetry run` inside services/toolkit/ (dev + CI use this path
+# directly); falls back to `python3 -m myfi_toolkit.cli` on PYTHONPATH if
+# poetry is not on PATH (e.g. an end user relying on the venv
+# `bin/myfi-venv-ensure` maintains under ${CLAUDE_PLUGIN_DATA}).
+set -eu -o pipefail
+
+# Resolve the plugin root: prefer ${CLAUDE_PLUGIN_ROOT} (set by Claude Code
+# when the plugin is installed); otherwise derive it from this script's own
+# location so `bin/myfi-toolkit` also works run directly from a repo clone.
+if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+  ROOT="$CLAUDE_PLUGIN_ROOT"
+else
+  SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  ROOT="$(dirname "$SELF")"
+fi
+
+TOOLKIT_DIR="$ROOT/services/toolkit"
+
+if command -v poetry >/dev/null 2>&1; then
+  exec poetry -C "$TOOLKIT_DIR" run myfi-toolkit "$@"
+fi
+
+exec env PYTHONPATH="$TOOLKIT_DIR${PYTHONPATH:+:$PYTHONPATH}" python3 -m myfi_toolkit.cli "$@"
