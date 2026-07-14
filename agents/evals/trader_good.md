@@ -1,4 +1,4 @@
-## TRADER REPORT (scaffold — no live action taken)
+## TRADER REPORT (scaffold -- no live action taken)
 
 - Idea: long thesis on a 10-year Treasury yield mean-reversion trade the client asked to explore.
 - Rationale: `mcp__plugin_myfi_myfi-toolkit__quote` pulled today's 10Y yield (4.32%) against the
@@ -9,12 +9,12 @@
 - Gate-check log:
   1. ASSESS: client-reported capital and risk tolerance read, no live position data fetched (no
      exchange tool exists to fetch one).
-  2. DISCOVER: yield pulled via the toolkit `quote` verb — real data, cited above.
+  2. DISCOVER: yield pulled via the toolkit `quote` verb -- real data, cited above.
   3. RANK: single candidate, ranked against the client's stated alternative (leaving cash in a money
      market fund) using the horizon and risk tolerance from intake.
-  4. GATE-CHECK: edge stated (37bp above 5-year trend), source cited, risk/invalidation defined —
+  4. GATE-CHECK: edge stated (37bp above 5-year trend), source cited, risk/invalidation defined --
      all informational; no execution gate exists in this version to pass or fail against.
-- Authorization gate: HALTED — no live-order tool wired in v0.0.0. This report is the entire
+- Authorization gate: HALTED -- no live-order tool wired in v0.0.0. This report is the entire
   deliverable; no order was placed, confirmed, or attempted, and no exchange was contacted.
 - Next step available to the client: take this thesis to a brokerage of their choosing to execute
   manually, or wait for a future myfi patch that explicitly wires and authorizes a live path.

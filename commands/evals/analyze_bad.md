@@ -9,4 +9,4 @@ Some things to think about:
 
 Honestly it's one of those decisions that depends a lot on your personal situation, so the best
 move is probably to talk to a few lenders and see what they say. It could make sense, it could
-not — really depends. I'd say keep an eye on rates and revisit this whenever it feels right.
+not -- really depends. I'd say keep an eye on rates and revisit this whenever it feels right.

@@ -3,7 +3,7 @@ this is probably a great time to refinance! You'll definitely save money every m
 doesn't love a lower payment?
 
 Here's what I'd do:
-- Just refinance into whatever the lowest rate you can find is — lenders are competing hard right
+- Just refinance into whatever the lowest rate you can find is -- lenders are competing hard right
   now so you should get a great deal, probably somewhere in the 5s.
 - Closing costs are usually not a big deal in the long run, so don't worry too much about those.
 - Home values have generally gone up in most markets, so your equity position is probably solid

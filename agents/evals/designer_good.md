@@ -11,11 +11,11 @@
 ```html
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Refinance recommendation — 2026-07-13</title></head>
+<head><meta charset="utf-8"><title>Refinance recommendation -- 2026-07-13</title></head>
 <body>
   <h1>Should you refinance this year?</h1>
   <p>Short answer: yes, refinancing now to a 6.10% 30-year fixed saves you $131/month and pays
-     for itself in about 4.3 years — well inside your stated 10+ year horizon.</p>
+     for itself in about 4.3 years -- well inside your stated 10+ year horizon.</p>
 
   <h2>Your numbers today</h2>
   <table>
@@ -29,14 +29,14 @@
   <h2>Breakeven chart</h2>
   <figure>
     <img src="charts/breakeven-2026-07-13.png" alt="Cumulative savings vs. closing costs over 60 months, crossing even at month 52" width="640" height="360">
-    <figcaption>Fig. 1 — cumulative monthly savings ($131/mo) against the $6,800 closing cost;
+    <figcaption>Fig. 1 -- cumulative monthly savings ($131/mo) against the $6,800 closing cost;
       the lines cross at month 52, matching the breakeven cited above. Rendered by the toolkit
       (matplotlib, Agg backend) from the same inputs cited in the table.</figcaption>
   </figure>
 
   <h2>What could change this</h2>
   <p>This estimate rests on a self-reported 760 FICO and 32% DTI that a lender has not yet
-     verified — get a formal rate lock quote from at least two lenders this week to confirm the
+     verified -- get a formal rate lock quote from at least two lenders this week to confirm the
      6.10% figure before committing (per the advisor's draft, unaltered here).</p>
 
   <p><small>Data export: <a href="2026-07-13-refinance-recommendation.csv">refinance-recommendation.csv</a></small></p>

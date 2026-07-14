@@ -19,7 +19,7 @@ Per-category monthly totals (Jan / Feb / Mar 2026, USD):
 
 - Anomalies: 3 rows had an empty `category` field; grouped under "Other" and flagged in the
   returned CSV rather than silently dropped. Row totals reconcile exactly to the source file's sum
-  ($5,120.09) — verified by cross-footing before returning this report.
+  ($5,120.09) -- verified by cross-footing before returning this report.
 - Out of scope, not attempted: no spending-pattern interpretation, no budget recommendation, no
-  comparison to prior quarters — that judgment belongs to `@advisor` if the client wants it.
+  comparison to prior quarters -- that judgment belongs to `@advisor` if the client wants it.
 - Agent ID + timestamp: worker-1 @ 2026-07-13T14:02:00Z
