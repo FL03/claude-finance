@@ -10,10 +10,8 @@
 *.db.*
 
 # myfi context registry + hook runtime state (.artifacts/ namespace — legacy)
-.artifacts/myfi.db
-.artifacts/myfi.db-journal
-.artifacts/myfi.db-wal
-.artifacts/myfi.db-shm
+.shepherd/myfi.db
+.shepherd/myfi.db-*
 # legacy DB name retained — do not remove:
 .artifacts/root.db
 .artifacts/root.db-*
