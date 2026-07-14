@@ -6,24 +6,25 @@
 
 ---
 
-> An all-in-one financial plugin with a wall-street grade financial planner alongside a custom toolkit and supported with various related skills ensuring a QUANT level understanding of market conditions.
+> An all-in-one financial plugin: a wall-street grade financial planner, a custom research toolkit,
+> and a set of skills that together aim for a QUANT-level understanding of market conditions.
 
-Shepherd is a [Claude Code](https://claude.com/claude-code) plugin for **long-running engineering work**: multi-hour sprints, full patch arcs, parallel feature lanes — a structured pipeline with fixed roles, gated phases, read-only audits, a per-project memory, and hooks that block the failure modes long sessions are prone to.
+myfi is a [Claude Code](https://claude.com/claude-code) plugin that turns a session into a small
+financial firm: a dispatcher that assembles client-ready reports, a research-grade quant, a
+compliance adversary, a final-artifact editor, a bounded catch-all worker, and a trade-idea
+scaffold with no live execution surface. Backing them is one Python toolkit (CLI + MCP server), a
+per-project database, and a market-data adapter contract that never hallucinates a price.
 
-A behavioral layer, not a heavy framework — no build step, no server. Everything ships as markdown, shell scripts, and a SQLite registry, wiring together Claude Code's native primitives (subagents, Agent Teams, `/loop`, hooks).
+No build step, no server to run. Everything ships as markdown (agents, skills, commands), one
+poetry-managed service layer, and a stdio MCP server wired through `.mcp.json`.
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
-│  /myfi:plant    Author drift-resistant sprint seeds (Opus)         │
-│  /myfi:spawn    The execution path — root + teammate-conductor(s)  │
-│                     --scope <sprint|patch|minor|version>               │
-│                     --parallel <N> | --auto | --staged                 │
-│  /myfi:focus    Keep the session on-task (focus loop + heartbeat)  │
-│  /myfi:loop     Bounded loop-until-done (per-role templates)       │
-│  /myfi:toolkit  Tool registry, so a session never forgets a tool   │
-│  /myfi:ctx      Inspect / refresh the per-project SQLite context   │
-│  /myfi:cleanup  Prune stale teammates, worktrees, locks            │
-└────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│  /myfi:analyze <subject>   Single-shot report, one agent pass            │
+│  /myfi:plan <goal>         Full advisor-led flock pipeline               │
+│  /myfi:taxes [tax_year]    Tax-workflow pipeline, forms + deadline       │
+│  /myfi:trade <thesis>      SCAFFOLD, authorization gate, no live orders  │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -35,10 +36,9 @@ A behavioral layer, not a heavy framework — no build step, no server. Everythi
 - [Install](#install)
 - [Quickstart](#quickstart)
 - [Commands](#commands)
-- [Usage playbooks](#usage-playbooks)
-- [Under the hood](#under-the-hood)
+- [The toolkit](#the-toolkit)
+- [Market data](#market-data)
 - [Configure](#configure)
-- [Compose with your own skills](#compose-with-your-own-skills)
 - [Troubleshooting and FAQ](#troubleshooting-and-faq)
 - [File map](#file-map)
 - [Versioning](#versioning)
@@ -49,59 +49,39 @@ A behavioral layer, not a heavy framework — no build step, no server. Everythi
 
 ## Why myfi
 
-A naive long-running Claude session fails in predictable ways. Shepherd answers each one with a mechanism, not a suggestion.
-
-| Failure mode | What goes wrong | Shepherd's mechanism |
-| :--- | :--- | :--- |
-| **Tunnel vision** | Ignores the issue ledger underneath. | Phase 0 mesh enumerates every open issue/PR, surfaces out-of-milestone CRITICAL/HIGH as drift risks. |
-| **Duplication** | Types/helpers get re-invented. | `[DO-NOT-DUPLICATE]` grep gate in every brief; a write-time hook blocks a reused name/field shape. |
-| **Scope drift** | Sprints grow features never seeded. | Every brief is anchored to the seed; the auditor's `completeness` concern fails a drifted lane. |
-| **Audit theater** | The reviewer wrote the code. | A read-only auditor swarm (3-5 agents, split by concern) reviews in parallel from a separate tier. |
-| **Unreviewed handoff** | Coder's "self-gate green" claim stands in for review. | The conductor holds a PASS from a wave-review auditor first; REDO forces a named, capped redo. |
-| **Wrapper bloat** | Hollow structs added for structure's sake. | A wrapper gate at close plus subtract-don't-add: net-negative lines, deps, abstractions. |
-| **Release malpractice** | Squash-merging unsigned, untested commits. | The conductor drives the squash-to-main pipeline with ordered gates, signed commits. |
-| **Off-task after hours** | A multi-hour sprint drifts from the objective. | A **focus loop** surviving compaction, plus a **focus heartbeat** re-anchoring on a cadence. |
-| **Passive stalls** | The root spawns helpers, then waits. | A coordinate-active-drive contract + Stop hook blocking a premature halt while work is outstanding. |
-
----
+| What you want | What myfi gives you |
+| :--- | :--- |
+| A real, client-ready report, not a chat reply | `@advisor` assembles one synthesized artifact from every specialist it dispatches, not a raw agent transcript. |
+| Numbers grounded in real data | Every quote routes through the `MarketDataSource` contract, no provider means a self-contained research-degrade default, never a fabricated price. |
+| A compliance check before anything ships | `@auditor` runs a Hypothesis + Falsification + Confidence pass on every draft, PASS/REDO, capped at 3 cycles. |
+| Confidence that a trade idea stays an idea | `@trader` and `/myfi:trade` ship with zero live-execution surface, no order tool is wired in anywhere in this release. |
+| Your data staying yours | Every model call routes through `services/llm` to your **local** Claude Code, never a hosted inference API. |
+| A place for the flock to remember what it learned | A per-project SQLite registry (`.myfi/myfi.db`) backs the `improve` skill's harvest/store/inject/cite loop, findings become durable priors instead of being relearned. |
 
 ## How it works in 60 seconds
 
-Three ideas, and you have the model.
-
-**1. A closed flock of six agents**, each with one job and a fixed dispatch contract.
+**1. A closed flock of six agents.** Each has one job.
 
 | Agent | Job |
 | :--- | :--- |
-| `@engineer` | Audits ground truth, authors the sprint plan. |
-| `@critic` | Adversarially reviews the plan before any code. |
-| `@coder` | The only role writing production code, in parallel waves. |
-| `@auditor` | Read-only reviewer; a swarm at sprint close. |
-| `@worker` | Bounded catch-all: monitoring, ops, cleanup. |
-| `@discovery` | Read-only orientation and research. |
+| `@advisor` | Decomposes a goal, dispatches the flock, assembles the final report. |
+| `@quant` | Research-grade modeling: pricing, risk, portfolio, factor analysis. |
+| `@auditor` | Compliance/local-law adversarial review, PASS or REDO. |
+| `@designer` | Final artifact editor: live-HTML reports, matplotlib charts, data exports. |
+| `@worker` | Bounded catch-all for routine, well-defined chores. |
+| `@trader` | Scaffold-only trade-cycle doctrine. No live execution, ever, in this release. |
 
-Closed on purpose — a seventh role is a major-version decision.
+See [`docs/flock.md`](docs/flock.md) for the full dispatch order and each agent's boundary.
 
-**2. A three-section pipeline.** Every sprint runs the same shape:
+**2. One shared toolkit.** `services/toolkit` is a single poetry project exposed as a CLI
+(`bin/myfi-toolkit`) and a stdio MCP server (`bin/myfi-mcp`, registered in `.mcp.json`), carrying
+numpy, pandas, scipy, and matplotlib (Agg backend). It fronts a per-project SQLite registry and the
+market-data adapter contract every quote goes through. See [`docs/toolkit.md`](docs/toolkit.md).
 
-```text
-INTRODUCTION   ground-truth mesh  ->  @engineer plan  ->  @critic gate
-     │
-BODY           coder waves with between-wave gates (format / check / lint)
-     │           auditor swarm overlaps the last wave
-     │
-CLOSE          merge -> tag -> squash-to-main -> carry-forward -> close report
-```
-
-**3. Three meta tiers that drive it.** You rarely think about the tiers directly; you run a command and the right tier is adopted for you.
-
-| Tier | Profile | Adopted under | Role |
-| :--- | :--- | :--- | :--- |
-| Root | `agents/myfi.md` | `/myfi:spawn` | Dispatches engineer/critic, materializes teammate output, coordinates the close swarm. |
-| Conductor | `agents/conductor.md` | a teammate under `/myfi:spawn` | Executes a sprint or a single lane. |
-| Planter | `agents/planter.md` | `/myfi:plant` | Authors seeds, stewards git custody. |
-
-Everything else — SQLite memory, toolkit, loop templates, hooks — keeps those three ideas honest.
+**3. Four commands.** `/myfi:analyze` for a cheap single-shot report, `/myfi:plan` for the full
+advisor-led pipeline with the compliance gate, `/myfi:taxes` for the tax-year workflow, and
+`/myfi:trade` for a documented, permanently non-executing trade-idea walkthrough. See
+[`docs/commands.md`](docs/commands.md).
 
 ---
 
@@ -124,27 +104,36 @@ ln -s ~/src/FL03/myfi ~/.claude/plugins/myfi      # personal
 ln -s /path/to/FL03/myfi .claude-plugin/myfi      # per-project (mkdir -p .claude-plugin first)
 ```
 
-No build system. Runtime deps: `git`, `bash`, `sqlite3`, `jq`. `gh` powers the Phase 0 mesh's
-issue/PR ledger; without it, that step is skipped, not failed. Works across CLI, web, IDE.
+No build system. Runtime needs: `git`, `bash`, Python 3.14+, `poetry` for the toolkit venv (falls
+back to a `PYTHONPATH` install if absent), and `claude` on `PATH` for the LLM law below. No API key
+is required to get started. Full detail: [`docs/install.md`](docs/install.md).
 
 ---
 
 ## Quickstart
 
-From zero to your first audited sprint in about five minutes.
+From zero to your first report in about a minute, no API key needed.
 
 ```bash
-# 1. Configure myfi for this repo.
+# 1. Configure myfi for this repo (optional, every key has a working default).
+mkdir -p .claude
 cp /path/to/myfi/examples/minimal/myfi.toml .claude/myfi.toml
 
-# 2. Initialize the per-project context registry.
-/myfi:ctx    # or: shctx init && shctx refresh --scope=all && shctx status
+# 2. Verify the toolkit is reachable.
+bin/myfi-toolkit --version
+bin/myfi-toolkit db init
+bin/myfi-toolkit quote AAPL
 ```
 
-Then, in Claude Code: `/myfi:plant` (Opus, author the first seed), then `/myfi:spawn`
-(Sonnet, run the sprint). `/myfi:spawn` is the sole execution path — main chat becomes the
-root myfi and spawns a teammate-conductor (one lane by default) end-to-end. Add `--auto` or
-`--parallel <N>` once a sprint or two has gone clean; see the [playbooks](#usage-playbooks).
+Then, in Claude Code:
+
+```text
+/myfi:analyze "should I refinance this year?"
+```
+
+That single-shot pass pulls real data via the toolkit, dispatches one flock agent, and writes a
+report to `.myfi/reports/`. Reach for `/myfi:plan` next for a multi-step engagement that clears the
+compliance gate; see the [Commands](#commands) table below.
 
 ---
 
@@ -152,112 +141,59 @@ root myfi and spawns a teammate-conductor (one lane by default) end-to-end. Add 
 
 | Command | What it does |
 | :--- | :--- |
-| `/myfi:plant [scope]` | Author drift-resistant sprint seeds. Opus recommended. |
-| `/myfi:spawn [slug] [--scope ...] [--parallel N \| --auto \| --staged]` | The execution path — root spawns a teammate-conductor per lane. |
-| `/myfi:focus [...] [--heartbeat]` | Start/refresh the focus loop, or fire a re-anchor heartbeat. |
-| `/myfi:loop [task] [--max N] [--agent ...] [--interval ...]` | Bounded loop-until-done. |
-| `/myfi:toolkit [list\|add\|rm\|pin\|md]` | The tool registry. |
-| `/myfi:ctx` | Inspect/refresh the SQLite context registry. |
-| `/myfi:cleanup` | Prune stale teammates, worktrees, locks. |
+| `/myfi:analyze <subject> [--agent=...] [--out=<path>] [--json]` | Single-shot report: one toolkit pull, one flock agent pass, one artifact. |
+| `/myfi:plan <goal> [--horizon=<duration>] [--out=<path>] [--redo-cap=3]` | The full `@advisor`-led pipeline: decompose, produce, adversarially gate, finalize. |
+| `/myfi:taxes [tax_year] [--account ...] [--dry-run]` | Gather, classify, route to IRS form, estimate, flag the filing deadline, gate, summarize. |
+| `/myfi:trade <symbol-or-thesis> [--dry-run]` | SCAFFOLD. Documents the trade cycle, halts at a permanently-closed authorization gate. |
 
-Plant feeds spawn: seed first, then execute.
+Full flags, examples, and the report-artifact convention: [`docs/commands.md`](docs/commands.md).
 
 ---
 
-## Usage playbooks
+## The toolkit
 
-| Need | Command | Notes |
-| :--- | :--- | :--- |
-| One careful sprint, review it yourself | `/myfi:spawn` | No flags: a single lane end to end. Good for a new repo or a delicate change. |
-| Autopilot a whole patch | `/myfi:spawn --auto` | Alias for `--scope patch` — sequential sprints, fresh context each so quality doesn't decay. |
-| Independent work in parallel | `/myfi:spawn --parallel 3` | Disjoint sprints across worktrees, each its own teammate-conductor. Use when work is file-disjoint. |
-| Plan ahead before executing | `/myfi:plant arc \| dev.5 \| dev.5..dev.7` | Opus for seed quality; Sonnet/Haiku produce a degraded-seed advisory. |
-| Long sprint drifting off-task | `/myfi:focus --heartbeat` | The heartbeat adds a cadence inside a long stretch with no wake — set `[focus].heartbeat_interval = "45m"` for wall-clock. |
-| What myfi knows about this repo | `/myfi:ctx` | Inspects the SQLite registry: symbols, GitHub state, artifacts, memories, event log. |
-| Poll/monitor until a condition holds | `/myfi:loop "watch CI..." --agent worker --max 12 --interval 5m` | Hard cap + measurable termination predicate. |
-| Clean up after a parallel run | `/myfi:cleanup` | Operator-confirmed; never removes a live lane. |
+One poetry project, two entry points, one shared tool layer:
 
----
+- **CLI** (`bin/myfi-toolkit`): `--version`, `db init|migrate|version [--global]`, `quote
+  <symbol>`, `stats`.
+- **MCP** (`bin/myfi-mcp`, server key `myfi-toolkit` in `.mcp.json`): tools surface as
+  `mcp__plugin_myfi_myfi-toolkit__<tool>`: `describe_toolkit`, `quote`, `db_init`, `db_migrate`,
+  `db_version`.
+- **Database**: a per-project `.myfi/myfi.db` (git-ignored, WAL) plus an optional global
+  `~/.myfi/global.db`, gap-fill migrated from `myfi_toolkit/myctx/schema/*.sql`.
 
-## Under the hood
+Heavy imports (numpy/pandas/scipy/matplotlib/mcp) stay lazy inside subcommand handlers, never at
+module scope, so `bin/myfi-toolkit --version` stays fast. Full reference:
+[`docs/toolkit.md`](docs/toolkit.md).
 
-**Models.** `[models]` in `myfi.toml`, resolved by `shctx models resolve`, is the one table
-mapping each role to its model — set once instead of hand-pinning per spawn. Coders are always
-scoped to a disjoint file set so parallel waves cannot collide. `workflow_model_guard.sh` extends
-the same discipline to hand-authored Dynamic Workflow scripts: an `agent()` call with neither
-`model:` nor `agentType:` silently inherits the main-loop model instead, so it's blocked by default.
+## Market data
 
-**Self-contained engineer.** Can run as its own named teammate, running a read-only sub-flock
-in-session (discovery + intro-audit + its own dispatched critic) and returning a hash-tied
-*critic-proof*; root then accepts the plan via a thin mechanical gate (`shctx plan verify`) instead
-of re-reviewing it.
-
-**SQLite context registry.** `/myfi:ctx` manages `.myfi/myfi.db`: code symbols, GitHub
-state, artifacts, memories, flock profiles, lock history, event log — backs the dedup fast-path
-and carry-forward ledger.
-
-```bash
-shctx init && shctx refresh --scope=all && shctx status
-```
-
-**Workdir hygiene, self-eval, toolkit.** `shctx prune`/`--confirm` reclaims accreted state (dry-run
-default, moves — never deletes — to `/tmp`); `shctx eval run/report` scores a latent output via
-your local Claude Code, never a hosted API; `shctx toolkit add/list` merges project + global tools.
-
-**Per-language style files.** `.myfi/styles/<lang>.md` (rust, python, typescript, go, shell,
-sql), tracked in git, injected into every matching coder brief.
-
-**Mechanical enforcement hooks.** `dispatch_guard.sh` rejects a bad `subagent_type`;
-`dedup_write_guard.sh`/`dups_write_guard.sh` block a symbol reusing an existing name or shape;
-`coordinate_drive_guard.sh` blocks a premature root halt while teammates are idle;
-`workflow_model_guard.sh` blocks a Dynamic Workflow whose `agent()` calls omit both `model:` and
-`agentType:` — the shape that silently inherits the main-loop model instead of resolving from
-`[models]`. Smoke suite: `bash hooks/tests/run.sh`.
-
-**Six modular skills.** `skills/myfi` (dispatch law, pipeline, flock briefs), `skills/adaptation`
-(lesson memory), `skills/motivation` (focus, FOCUS-HEARTBEAT, drive, sentinel), `skills/harness`
-(Agent Teams, Workflow tool, `/loop`, `/goal`), `skills/context` (the `shctx` runtime),
-`skills/thinking`. Each rule pairs with a mechanism — a hook, a guard, or a halt code.
+Every quote goes through one typed contract, `MarketDataSource`, and every provider is honest about
+where its number came from (`Quote.source`). The v0.0.0 default, `research`, is self-contained and
+needs no API key; `finnhub`, `yfinance`, and `fred` are registered behind the same contract but
+deferred until a follow-up release wires the concrete HTTP client. Full contract and the provider
+table: [`docs/marketdata.md`](docs/marketdata.md).
 
 ---
 
 ## Configure
 
-Create `.claude/myfi.toml` at the repo root. Shepherd warns at every invocation until one exists.
+Create `.claude/myfi.toml` at the repo root, a template lives at
+[`examples/minimal/myfi.toml`](examples/minimal/myfi.toml). No section is required, every key has a
+working default.
 
 ```toml
-[project]
-name     = "my-project"
-language = "rust"
+[toolkit]
+db = ".myfi/myfi.db"
 
-[branching]
-patch_branch_pattern  = "v{X}.{Y}.{Z}"
-sprint_branch_pattern = "v{X}.{Y}.{Z}-dev.{N}"
-sprints_per_patch     = 10
+[llm]
+model = "claude-opus-4-8"
 
-[gates]
-check  = "cargo check --workspace"
-lint   = "cargo clippy --workspace -- -D warnings"
-format = "cargo fmt --all"
-
-[models]                 # optional — these ARE the defaults
-engineer  = "opus[1m]"
-conductor = "sonnet"
+[marketdata]
+provider = "research"
 ```
 
-See [`docs/configuration.md`](docs/configuration.md) for the full schema. A working multi-crate example lives at [`examples/rust-service/myfi.toml`](examples/rust-service/myfi.toml).
-
----
-
-## Compose with your own skills
-
-Shepherd orchestrates; your skills provide the per-keystroke voice.
-
-- **`code-style`** is injected into every coder brief by default.
-- **Domain skills** (`rust`, `webassembly`, `supabase`, …) wire in via `[skills.by_domain]`, attaching when a coder's file scope matches.
-- **`superpowers:brainstorming`/`writing-plans`** are loaded by `@engineer`.
-
-See [`docs/integration.md`](docs/integration.md) for the full model.
+Full schema: [`docs/configuration.md`](docs/configuration.md).
 
 ---
 
@@ -265,13 +201,13 @@ See [`docs/integration.md`](docs/integration.md) for the full model.
 
 | Question | Answer |
 | :--- | :--- |
-| `myfi.toml` is missing | Create `.claude/myfi.toml` (see [Configure](#configure)). |
-| `shctx: command not found` | Ships at `skills/context/scripts/`; invoke via `/myfi:ctx` if symlinked manually. |
-| Do I have to use Agent Teams? | Yes — `/myfi:spawn` always runs through a teammate-conductor, even for one lane; there's no separate solo mode. |
-| Which model should I use? | Opus for `/myfi:plant` and the engineer; Sonnet for the rest — myfi sets these defaults. |
-| My long sprint still drifts | Lower `[focus].heartbeat_actions` (default 20) or set `[focus].heartbeat_interval = "45m"`. |
-| A teammate crashed, left a worktree | Run `/myfi:cleanup`. |
-| Anything sent to a third-party API? | No — every LLM call routes through your local Claude Code. |
+| `bin/myfi-toolkit --version` is slow | It should not be, that path never imports numpy/pandas/scipy/matplotlib. If it is, check for a stale venv, `bin/myfi-venv-ensure` runs on every session start. |
+| `poetry: command not found` | Not fatal, `bin/myfi-toolkit`/`bin/myfi-mcp` fall back to `python3 -m myfi_toolkit.<module>` on `PYTHONPATH`. Install `poetry` for the maintained venv path. |
+| `.myfi/myfi.db` does not exist yet | Run `bin/myfi-toolkit db init`, or call `mcp__plugin_myfi_myfi-toolkit__db_init` from inside an agent turn, both are idempotent. |
+| A quote always returns the same placeholder price | You are on the default `research` provider, it is self-contained and does not hit a live feed. Set `MYFI_MARKETDATA_PROVIDER` once a concrete provider ships. |
+| Can `/myfi:trade` place an order? | No. No order, exchange, or execution tool is wired into `/myfi:trade` or `@trader` anywhere in this release, see [`docs/flock.md`](docs/flock.md#trader-read-literally). |
+| Anything sent to a third-party LLM API? | No, every model call routes through `services/llm` to your local Claude Code. |
+| A report artifact did not appear | Check `.myfi/reports/`, `analyze`/`plan`/`taxes` all write there unless `--dry-run` was passed. |
 
 ---
 
@@ -280,26 +216,29 @@ See [`docs/integration.md`](docs/integration.md) for the full model.
 | Path | Purpose |
 | :--- | :--- |
 | `.claude-plugin/plugin.json` | Plugin manifest. |
-| `agents/{engineer,critic,coder,auditor,worker,discovery}.md` | The closed flock. |
-| `agents/{myfi,conductor,planter}.md` | The three meta-orchestrators. |
-| `commands/{plant,spawn,focus,loop,toolkit,ctx,cleanup}.md` | Slash-command entry points. |
-| `skills/myfi/` | Dispatch law, sprint contract, pipeline, flock briefs, principles. |
-| `skills/{adaptation,motivation,harness,thinking}/` | Lesson memory, drive/focus, platform mechanics, thinking discipline. |
-| `skills/context/` | The `shctx` runtime: migrations, views, bash implementation. |
-| `services/{llm,eval}/` | Self-contained: the local-Claude-Code LLM call and the eval harness. |
-| `hooks/hooks.json` + `hooks/scripts/` | Lifecycle hooks; `bash hooks/tests/run.sh`. |
-| `docs/{configuration,integration,customization}.md` | Operator-facing documentation. |
-| `examples/{minimal,rust-service}/` | Starter config and a worked multi-crate example. |
+| `agents/{advisor,quant,auditor,designer,worker,trader}.md` | The closed flock. |
+| `commands/{analyze,plan,taxes,trade}.md` | The four entry points. |
+| `skills/{myfi,compliance,taxes,improve}/` | Core orientation, regulatory knowledge, tax workflow, the self-improvement loop. |
+| `services/toolkit/` | The `myfi_toolkit` poetry project: CLI, MCP server, `myctx` database, `marketdata` adapter. |
+| `services/{llm,eval}/` | The local-Claude-Code LLM service and the rubric-scored eval harness. |
+| `hooks/hooks.json` + `hooks/scripts/` | Lifecycle hooks (dispatch guard, dedup guard, venv bootstrap, self-improve capture). |
+| `bin/` | Root wrappers: `myfi-toolkit`, `myfi-mcp`, `myfi-llm`, `myfi-eval`, `myfi-venv-ensure`, `myfi-test`. |
+| `docs/{install,configuration,flock,toolkit,commands,marketdata}.md` | This documentation. |
+| `examples/minimal/myfi.toml` | Starter config. |
+| `tests/` | Structural gates and the end-to-end integration suite. |
 
 ---
 
 ## Versioning
 
-Semver: **major** = closed-flock contract change; **minor** = new commands/config keys; **patch** = dispatch/brief-template fixes. Current version: **0.0.0**. See [`CHANGELOG.md`](CHANGELOG.md).
+Semantic versioning. Current version: **0.0.0**, the first complete, installable release. See
+[`CHANGELOG.md`](CHANGELOG.md).
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md). All main-bound changes flow through a PR; the hook suite (`bash hooks/tests/run.sh`) must stay green.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md). All
+main-bound changes flow through a PR; the hook suite (`bash hooks/tests/run.sh`) and
+`bin/myfi-test` must stay green.
 
 ## License
 

@@ -1,0 +1,12 @@
+{
+  "kind": "close_report",
+  "subject": "A sprint close report (.shepherd/docs/reports/<date>-<sprint>-close.md): the root-shepherd's final verdict on whether the sprint's [ACCEPTANCE] bars actually passed, written for an operator who was not in the room.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "honest-verdict", "weight": 2, "desc": "States a plain DONE / DONE_WITH_CONCERNS / BLOCKED-shaped verdict per unit and per sprint, with no hedging into a non-answer and no claiming green when a gate actually failed or was skipped." },
+    { "key": "evidence-cited", "weight": 2, "desc": "Every claim of 'passing' or 'shipped' points at a concrete, re-runnable check (a command, an exit code, a file path, a test name), not an assertion with nothing behind it." },
+    { "key": "follow-ups-named", "weight": 1, "desc": "Any known gap, deferred item, or concern is named explicitly with a specific next action and owner-shaped scope: not buried, not silently dropped, not a vague 'could be improved'." }
+  ],
+  "guidance": "Reward a close report an operator could act on without re-deriving the sprint from the diff: a verdict that matches the actual evidence, figures traceable to a real command or artifact, and every loose end named rather than smoothed over. Penalize a report that declares victory without evidence, silently omits a known failure or deferred deliverable, or pads length without adding checkable substance."
+}

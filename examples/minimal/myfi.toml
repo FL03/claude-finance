@@ -1,0 +1,30 @@
+# myfi runtime configuration template.
+#
+# Copy this to .claude/myfi.toml at your project root and edit as needed:
+#   mkdir -p .claude
+#   cp examples/minimal/myfi.toml .claude/myfi.toml
+#
+# No section is required. Every key below already has a working default, an
+# empty or missing .claude/myfi.toml still runs. See docs/configuration.md
+# for the full schema.
+
+[toolkit]
+# Per-project SQLite registry (git-ignored). Created lazily by the first
+# `bin/myfi-toolkit db init` (or the MCP db_init tool) call.
+db = ".myfi/myfi.db"
+# Optional second registry shared across projects. Leave commented to stay
+# project-local.
+# global_db = "~/.myfi/global.db"
+
+[llm]
+# Every model call in this plugin routes through services/llm to your LOCAL
+# Claude Code (`claude -p`), never a hosted inference API. `model` is the
+# alias services/llm requests when a caller does not pass --model directly.
+model = "claude-opus-4-8"
+
+[marketdata]
+# Default degrades to the self-contained research path, no API key needed.
+# Concrete providers (finnhub, yfinance, fred) are registered behind the
+# MarketDataSource contract but deferred until a follow-up release wires the
+# concrete HTTP client. See docs/marketdata.md.
+provider = "research"

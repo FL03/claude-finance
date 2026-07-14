@@ -1,0 +1,13 @@
+{
+  "kind": "readme_finance",
+  "subject": "The project README (or an equivalent top-level orientation document) for the myfi finance plugin, read cold by a newcomer deciding whether and how to install it.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "describes-the-flock", "weight": 2, "desc": "Names the six-agent flock (advisor, quant, auditor, designer, worker, trader) and states the shape of the dispatch pipeline, not just that agents exist." },
+    { "key": "install-clarity", "weight": 2, "desc": "A newcomer can install the plugin and run a first command from the document alone: marketplace install, runtime requirements, and a concrete quickstart command." },
+    { "key": "no-engineering-residue", "weight": 3, "desc": "Contains no leftover language from a generic engineering/sprint orchestration plugin: no 'engineering work', no @engineer, no @coder, no 'sprint', no generic pipeline/audit-swarm framing unrelated to finance." },
+    { "key": "newcomer-actionable", "weight": 2, "desc": "Concrete and specific throughout: real command names (/myfi:analyze, /myfi:plan, /myfi:taxes, /myfi:trade), real toolkit/MCP surface, real config keys, not vague marketing prose." }
+  ],
+  "guidance": "Reward a document that a newcomer could act on immediately: install it, configure it, run a first command, and understand who the six agents are and why the toolkit/market-data contract exists. Penalize heavily any surviving engineering-sprint-orchestration language (an unrelated plugin's residue), vague platitudes with no concrete command/tool name, or a document that describes myfi's existence without letting the reader act."
+}
