@@ -2,57 +2,8 @@
 *.bk
 *.bk.*
 
-# Claude Code agent worktrees — transient, created by Agent isolation:worktree
-# (registered git worktrees; never tracked in the plugin repo)
-.claude/worktrees/
-
 *.db
 *.db.*
-
-# myfi context registry + hook runtime state (.artifacts/ namespace — legacy)
-.shepherd/myfi.db
-.shepherd/myfi.db-*
-# legacy DB name retained — do not remove:
-.artifacts/root.db
-.artifacts/root.db-*
-.artifacts/myfi.lock
-.artifacts/project.json
-.artifacts/tmp/
-.artifacts/logs/
-.artifacts/cache/
-.artifacts/dispatch/
-.artifacts/discoveries/
-.artifacts/insights/
-.artifacts/pauses/
-.artifacts/runs/
-.artifacts/memory/
-
-# myfi context registry + hook runtime state (.myfi/ namespace — default)
-.myfi/myfi.db
-.myfi/myfi.db-journal
-.myfi/myfi.db-wal
-.myfi/myfi.db-shm
-# legacy DB name retained — do not remove:
-.myfi/root.db
-.myfi/root.db-*
-.myfi/myfi.lock
-.myfi/project.json
-.myfi/tmp/
-.myfi/logs/
-.myfi/cache/
-.myfi/dispatch/
-.myfi/discoveries/
-.myfi/insights/
-.myfi/pauses/
-.myfi/runs/
-.myfi/memory/
-
-# toolkit.json is TRACKED — explicitly un-ignore in case *.json patterns are added later
-!.artifacts/toolkit.json
-
-# Dev-only tooling output (scripts/ — not part of the shipped plugin surface)
-/scripts/.filetree.json
-!.myfi/toolkit.json
 
 *.log
 *.log.*
@@ -71,6 +22,41 @@
 
 *.zip
 *.zip.*
+
+
+# ----- [DIRECTORIES] -----
+**/.DS_STORE/
+**/.archive/
+**/cache/
+**/logs/
+
+# ----- [CLAUDE] -----
+.claude/worktrees/
+
+
+# ----- [SHEPHERD] -----
+.shepherd/*.db
+.shepherd/*.db-*
+.shepherd/*.lock
+
+.shepherd/tmp/
+.shepherd/logs/
+.shepherd/cache/
+.shepherd/dispatch/
+.shepherd/discoveries/
+.shepherd/insights/
+.shepherd/pauses/
+.shepherd/runs/
+.shepherd/memory/
+
+# toolkit.json is TRACKED — explicitly un-ignore in case *.json patterns are added later
+!.artifacts/toolkit.json
+
+# Dev-only tooling output (scripts/ — not part of the shipped plugin surface)
+/scripts/.filetree.json
+!.myfi/toolkit.json
+
+
 
 ## Directories
 **/.artifacts/cache/
