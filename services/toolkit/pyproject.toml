@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "myfi_toolkit" }]
 
 [tool.poetry.dependencies]
-python = "^3.14"
+python = "^3.12"
 numpy = "^2.4.4"
 pandas = "^3.0.3"
 scipy = "^1.17.1"

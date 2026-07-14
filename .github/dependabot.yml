@@ -5,3 +5,11 @@ updates:
     directory: /
     schedule:
       interval: monthly
+
+  # services/toolkit is the only dependency-carrying surface (poetry:
+  # numpy/pandas/scipy/matplotlib/mcp + pytest/ruff). pip is dependabot's
+  # ecosystem for Poetry projects (reads pyproject.toml + poetry.lock).
+  - package-ecosystem: pip
+    directory: /services/toolkit
+    schedule:
+      interval: monthly

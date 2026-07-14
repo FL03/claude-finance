@@ -110,10 +110,10 @@ jobs:
           NOTES="${RUNNER_TEMP}/release-notes-v${CURRENT}.md"
           if [ -f CHANGELOG.md ]; then
             awk -v ver="${CURRENT}" '
-              BEGIN { gsub(/\./, "\\.", ver); pat = "^## v" ver "( |$)" }
-              $0 ~ pat                   { capture = 1; print; next }
-              capture && /^## v[0-9]/    { exit }
-              capture                    { print }
+              BEGIN { gsub(/\./, "\\.", ver); pat = "^## \\[" ver "\\]" }
+              $0 ~ pat                     { capture = 1; print; next }
+              capture && /^## \[[0-9]/     { exit }
+              capture                      { print }
             ' CHANGELOG.md > "$NOTES"
           fi
           if [ -s "$NOTES" ]; then
@@ -206,24 +206,11 @@ jobs:
             && mv .claude-plugin/marketplace.json.tmp .claude-plugin/marketplace.json
           echo "  bumped .claude-plugin/plugin.json + marketplace.json"
 
-          # ── SKILL.md frontmatters: bump version: line in both skill entry points ──
-          for f in skills/shepherd/SKILL.md skills/context/SKILL.md; do
-            if [ -f "$f" ]; then
-              sed -i.bak -E "s/^version: ${CURRENT}$/version: ${NEXT}/" "$f"
-              rm -f "${f}.bak"
-              echo "  bumped $f"
-            fi
-          done
-
-          # ── README: bump the title heading + the current-version line ──
+          # ── README: bump the current-version line (CURRENT → NEXT) ──
+          # myfi's skills carry no version: frontmatter and the README title is
+          # unversioned ("# myfi"), so the only version ref to bump on release is
+          # the "Current version: **X**" line in the README Versioning section.
           if [ -f README.md ]; then
-            # Title heading "# shepherd — vX.Y.Z". Structural match (any version
-            # → NEXT) so a title left behind a few patches self-heals instead of
-            # sticking — the failure mode that left it at v6.0.5 through v6.0.7.
-            sed -i.bak -E \
-              "s/^# shepherd — v[0-9]+\.[0-9]+\.[0-9]+/# shepherd — v${NEXT}/" \
-              README.md
-            # Current-version line (specific CURRENT → NEXT).
             sed -i.bak -E \
               "s/Current version: \*\*${CURRENT}\*\*/Current version: **${NEXT}**/" \
               README.md
@@ -231,7 +218,7 @@ jobs:
           fi
 
           # ── Report any remaining old-version strings for manual review ──
-          # Excludes: .artifacts/ (sprint docs), .git/, and lock files —
+          # Excludes: .shepherd/ (planning/sprint docs), .git/, and lock files —
           # these contain version strings that are NOT intentional version refs.
           echo "::group::Remaining references to ${CURRENT} (review manually if any)"
           grep -rn "${CURRENT}" \
@@ -239,8 +226,7 @@ jobs:
             --include="*.json" \
             --include="*.toml" \
             --exclude-dir=.git \
-            --exclude-dir=.artifacts \
-            --exclude=skills-lock.json \
+            --exclude-dir=.shepherd \
             --exclude='*.lock' \
             . || true
           echo "::endgroup::"
@@ -254,12 +240,8 @@ jobs:
         run: |
           set -euo pipefail
           # Stage only the files the bump step explicitly modified — never `git add -A`.
-          # .artifacts/, lock files, and unrelated tracked/untracked files must not
-          # ride this commit.
-          git add .claude-plugin/plugin.json .claude-plugin/marketplace.json
-          for f in skills/shepherd/SKILL.md skills/context/SKILL.md README.md; do
-            [ -f "$f" ] && git add "$f" || true
-          done
+          # Lock files and unrelated tracked/untracked files must not ride this commit.
+          git add .claude-plugin/plugin.json .claude-plugin/marketplace.json README.md
           if git diff --cached --quiet; then
             echo "No version changes to commit (idempotent re-run?)."
           else

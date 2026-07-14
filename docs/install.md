@@ -7,7 +7,7 @@ service layer, and a stdio MCP server. Works across CLI, web, and IDE surfaces.
 ## From the marketplace (recommended)
 
 ```text
-/plugin marketplace add FL03/myfi
+/plugin marketplace add FL03/claude-finance
 /plugin install myfi@fl03
 ```
 
@@ -16,9 +16,9 @@ Update later with `/plugin update myfi@fl03`.
 ## Personal symlink or per-project pin
 
 ```bash
-git clone https://github.com/FL03/myfi.git ~/src/FL03/myfi
-ln -s ~/src/FL03/myfi ~/.claude/plugins/myfi      # personal, every project
-ln -s /path/to/FL03/myfi .claude-plugin/myfi      # per-project pin (mkdir -p .claude-plugin first)
+git clone https://github.com/FL03/claude-finance.git ~/src/FL03/claude-finance
+ln -s ~/src/FL03/claude-finance ~/.claude/plugins/myfi      # personal, every project
+ln -s /path/to/FL03/claude-finance .claude-plugin/myfi      # per-project pin (mkdir -p .claude-plugin first)
 ```
 
 ## Runtime requirements
@@ -26,7 +26,7 @@ ln -s /path/to/FL03/myfi .claude-plugin/myfi      # per-project pin (mkdir -p .c
 | Requirement | Why |
 | :--- | :--- |
 | `git`, `bash` | Repo checkout, hooks, structural tests. |
-| Python 3.14+ | `services/toolkit`, `services/llm`, `services/eval`. |
+| Python 3.12+ | Required by `services/toolkit` (its `pyproject.toml` floor, set by numpy/scipy). `services/llm` and `services/eval` are stdlib-only and run on older Python, but 3.12+ is the supported baseline. |
 | `poetry` (2.3.2+) | Manages the `services/toolkit` venv (`myfi_toolkit`: numpy, pandas, scipy, matplotlib, the `mcp` SDK). Not required at runtime: `bin/myfi-toolkit`/`bin/myfi-mcp` fall back to `python3 -m myfi_toolkit.<module>` on `PYTHONPATH` if `poetry` is absent from `PATH`. |
 | `claude` on `PATH` | Every model call in this plugin shells out to your local Claude Code (`claude -p`, see [`toolkit.md`](toolkit.md#the-llm-law)). No hosted inference API is ever called. |
 

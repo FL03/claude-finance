@@ -4,6 +4,24 @@ All notable changes to myfi are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows
 [Semantic Versioning](https://semver.org/).
 
+## [0.0.2] - 2026-07-14
+
+### Changed
+
+- Version bump only: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and the
+  README version line advanced 0.0.1 → 0.0.2. No functional, agent, toolkit, or contract change.
+
+## [0.0.1] - 2026-07-14
+
+### Changed
+
+- Renamed the GitHub repository `FL03/myfi` → `FL03/claude-finance`, and updated `homepage`,
+  `repository`, and `plugins[].source.repo` in `.claude-plugin/plugin.json` and
+  `.claude-plugin/marketplace.json` to the new URL. The plugin and every tool keep the `myfi`
+  identity (plugin name, `/myfi:*` commands, `bin/myfi-*`, the `myfi-toolkit` MCP server, the
+  `myfi_toolkit` package, the `.myfi/` registry) — only the repository name changed.
+- Reworked `.gitignore`.
+
 ## [0.0.0] - 2026-07-13
 
 The Foundation, the first complete, installable myfi finance plugin: a six-agent flock, four
@@ -49,4 +67,6 @@ skills, four commands, and a Python toolkit exposed as both a CLI and an MCP ser
   behind `MarketDataSource` but each raises until a follow-up release adds the HTTP client and API
   key handling.
 
-[0.0.0]: https://github.com/FL03/myfi/releases/tag/v0.0.0
+[0.0.2]: https://github.com/FL03/claude-finance/releases/tag/v0.0.2
+[0.0.1]: https://github.com/FL03/claude-finance/releases/tag/v0.0.1
+[0.0.0]: https://github.com/FL03/claude-finance/releases/tag/v0.0.0
