@@ -34,14 +34,11 @@ def quote(symbol: str) -> dict[str, object]:
     Uses the provider named by MYFI_MARKETDATA_PROVIDER, defaulting to the
     research-degrade source when unset (self-contained, no API key required).
     """
-    from dataclasses import asdict, is_dataclass
-
     from myfi_toolkit import marketdata
 
-    q = marketdata.default_source().quote(symbol)
-    if is_dataclass(q):
-        return asdict(q)
-    return {"symbol": symbol, "value": str(q)}
+    # Quote.to_dict() isoformats `asof` so the payload is plain-JSON-serializable
+    # and identical to the CLI's `quote` output; asdict() would leak a raw datetime.
+    return marketdata.default_source().quote(symbol).to_dict()
 
 
 def _db_state(use_global: bool = False, apply_migrations: bool = True) -> dict[str, object]:

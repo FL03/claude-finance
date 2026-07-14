@@ -22,9 +22,11 @@ main_branch           = "main"
 release_tag_pattern   = "v{X}.{Y}.{Z}"
 
 [gates]
-# Python/poetry toolkit lives at services/toolkit/ (locked in the v0.0.0 seed).
-# Gates go green once dev.0 scaffolds it; they are the foundation sprint's acceptance.
-check  = "poetry -C services/toolkit run pytest -q"
+# check runs the full release gate (bin/myfi-test: toolkit pytest + services
+# unittest + hooks + integration), so root's between-wave gate covers all four
+# lanes, not just the toolkit pytest lane. lint/format stay scoped to the
+# poetry toolkit (the only ruff-managed Python surface).
+check  = "bash bin/myfi-test"
 lint   = "poetry -C services/toolkit run ruff check ."
 format = "poetry -C services/toolkit run ruff format --check ."
 

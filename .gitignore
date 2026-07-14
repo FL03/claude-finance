@@ -76,7 +76,6 @@
 **/.cache/
 **/coverage/
 **/build/
-**/coverage/
 **/dist/
 **/out/
 **/logs/
@@ -143,6 +142,9 @@
 ## Python
 **/__pycache__/
 **/venv/
+**/.venv/
+**/.pytest_cache/
+**/.ruff_cache/
 
 *.pyc
 *.pyc.*
