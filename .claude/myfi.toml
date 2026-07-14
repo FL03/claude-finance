@@ -1,0 +1,19 @@
+# myfi runtime configuration (per-project, live copy).
+# The template lives at examples/minimal/myfi.toml (added in Wave 7).
+# See docs/configuration.md for the full schema.
+
+[toolkit]
+# Per-project SQLite registry (git-ignored). Created by `myfi-toolkit db init`.
+db = ".myfi/myfi.db"
+# Optional global registry, opt-in. Leave commented to stay project-local.
+# global_db = "~/.myfi/global.db"
+
+[llm]
+# All model calls route through services/llm shelling to LOCAL Claude Code — never a hosted API.
+# `model` is the default the local Claude Code invocation requests.
+model = "claude-opus-4-8"
+
+[marketdata]
+# Default degrades to the WebFetch/research path. Concrete providers (finnhub, yfinance,
+# fred, massive) wire in BEHIND the MarketDataSource contract; none is required for v0.0.0.
+provider = "research"

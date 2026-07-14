@@ -1,0 +1,11 @@
+{
+  "kind": "worker_task",
+  "subject": "A bounded task output produced by @worker for a routine finance chore (form-fill, aggregation, lookup, reformatting) — not a full advisory, model, compliance review, or trade thesis.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "task-bounded", "weight": 2, "desc": "Stays exactly within the deliverable and budget stated in the brief — no scope-creep into advisory recommendations, modeling, compliance verdicts, or trade reasoning that belongs to another agent." },
+    { "key": "competent", "weight": 2, "desc": "Correct arithmetic/aggregation and grounded in real data pulled via the myfi toolkit (or an explicitly cited source) — no hallucinated figures, no silently skipped rows." }
+  ],
+  "guidance": "Reward a report that delivers exactly the bounded task, cites the toolkit verb or file it pulled data from, and reports anomalies plainly. Penalize scope-creep into judgment calls that belong to @advisor/@quant/@auditor/@trader, hallucinated numbers, or a deliverable that silently drifts from what the brief asked for."
+}

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# bin/myfi-mcp — thin wrapper for the myfi_toolkit stdio MCP server.
+#
+# Registered as the `myfi-toolkit` server in `.mcp.json`. Same poetry-run /
+# python-fallback pattern as `bin/myfi-toolkit` (discovery-packaging §3).
+set -eu -o pipefail
+
+if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+  ROOT="$CLAUDE_PLUGIN_ROOT"
+else
+  SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  ROOT="$(dirname "$SELF")"
+fi
+
+TOOLKIT_DIR="$ROOT/services/toolkit"
+
+if command -v poetry >/dev/null 2>&1; then
+  exec poetry -C "$TOOLKIT_DIR" run myfi-mcp "$@"
+fi
+
+exec env PYTHONPATH="$TOOLKIT_DIR${PYTHONPATH:+:$PYTHONPATH}" python3 -m myfi_toolkit.mcp_server "$@"

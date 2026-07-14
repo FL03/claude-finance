@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# bin/myfi-test -- the myfi release-gate: runs all four test lanes.
+#
+# W7-integration-close [SPEC]/[NOTES]: "Add bin/myfi-test (runs toolkit pytest
+# + services unittest + hooks run.sh + integration)... the single command the
+# release-gate calls." Wires exactly the four lanes the v0.0.0 plan's shared
+# naming section (§Shared naming) locks:
+#   1. toolkit    -- `poetry -C services/toolkit run pytest -q`
+#   2. services   -- `python3 -m unittest discover` over services/llm + services/eval
+#   3. hooks      -- `bash hooks/tests/run.sh`
+#   4. integration -- `bash tests/integration/run.sh` (this unit)
+#
+# Each lane keeps its own gate discipline (deterministic, mock seam, no
+# network, no live LLM call) -- this script adds no logic beyond running the
+# four and aggregating pass/fail, so it stays a thin release-gate dispatcher,
+# not a fifth place any of those lanes' behavior could drift.
+#
+# NOTE (flagged, not silently changed -- plan [NOTES]): `.claude/shepherd.toml`
+# [gates].check currently wires only the toolkit pytest lane. Extending it to
+# call this script instead, so root's between-wave gate covers all four
+# lanes, is a `.claude/shepherd.toml` edit outside this unit's [FILES] scope
+# -- left as a named follow-up for whoever owns that file next.
+set -uo pipefail
+
+if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+  ROOT="$CLAUDE_PLUGIN_ROOT"
+else
+  SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  ROOT="$(dirname "$SELF")"
+fi
+cd "$ROOT"
+
+fail=0
+total=0
+
+run_lane() {
+  local name="$1"
+  shift
+  total=$((total + 1))
+  echo "############################################################"
+  echo "# $name"
+  echo "############################################################"
+  if "$@"; then
+    echo ">>> $name: PASS"
+  else
+    echo ">>> $name: FAIL"
+    fail=$((fail + 1))
+  fi
+  echo
+}
+
+# Lane 1 -- toolkit pytest. Prefers poetry (the sanctioned path); falls back
+# to a plain PYTHONPATH pytest run if poetry is not on PATH, mirroring
+# bin/myfi-toolkit's own poetry-less fallback.
+run_toolkit_pytest() {
+  if command -v poetry >/dev/null 2>&1; then
+    poetry -C "$ROOT/services/toolkit" run pytest -q
+  else
+    PYTHONPATH="$ROOT/services/toolkit" python3 -m pytest -q "$ROOT/services/toolkit/tests"
+  fi
+}
+run_lane "toolkit pytest (services/toolkit)" run_toolkit_pytest
+
+# Lane 2 -- stdlib services (services/llm + services/eval): no deps, mock
+# seam, deterministic. Two discover calls -- each service is its own
+# independent unittest root per the plan's shared test-lane naming.
+run_services_unittest() {
+  python3 -m unittest discover -s "$ROOT/services/llm/tests" \
+    && python3 -m unittest discover -s "$ROOT/services/eval/tests"
+}
+run_lane "services unittest (services/llm + services/eval)" run_services_unittest
+
+# Lane 3 -- harness enforcement hooks.
+run_lane "hooks (hooks/tests/run.sh)" bash "$ROOT/hooks/tests/run.sh"
+
+# Lane 4 -- top-level integration suite (this unit): plugin-load + the
+# /myfi:analyze mock-seam e2e + the toolkit db+quote smoke.
+run_lane "integration (tests/integration/run.sh)" bash "$ROOT/tests/integration/run.sh"
+
+echo "============================================================"
+echo "$((total - fail))/$total suites passed"
+if [ "$fail" = 0 ]; then
+  echo "PASS bin/myfi-test"
+else
+  echo "FAIL bin/myfi-test"
+fi
+exit "$fail"

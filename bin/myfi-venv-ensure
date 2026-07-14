@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# bin/myfi-venv-ensure — idempotent myfi_toolkit venv bootstrap.
+#
+# Installs/refreshes the myfi_toolkit poetry venv under ${CLAUDE_PLUGIN_DATA}
+# (survives plugin updates — unlike ${CLAUDE_PLUGIN_ROOT}, which gets purged
+# ~7 days after an update per the packaging discovery). Diffs the bundled
+# services/toolkit/pyproject.toml against a copy stashed on the previous run
+# and only re-installs when it actually changed, so repeated calls (the Wave 6
+# SessionStart hook calls this on every session start) are cheap and safe to
+# run by hand too.
+set -eu -o pipefail
+
+if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
+  ROOT="$CLAUDE_PLUGIN_ROOT"
+else
+  SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  ROOT="$(dirname "$SELF")"
+fi
+
+TOOLKIT_DIR="$ROOT/services/toolkit"
+PYPROJECT="$TOOLKIT_DIR/pyproject.toml"
+
+DATA_DIR="${CLAUDE_PLUGIN_DATA:-$HOME/.myfi/plugin-data}"
+STAMP_DIR="$DATA_DIR/toolkit"
+STAMP_FILE="$STAMP_DIR/pyproject.toml.installed"
+
+if [ ! -f "$PYPROJECT" ]; then
+  echo "myfi-venv-ensure: $PYPROJECT not found" >&2
+  exit 1
+fi
+
+mkdir -p "$STAMP_DIR"
+
+if [ -f "$STAMP_FILE" ] && cmp -s "$PYPROJECT" "$STAMP_FILE"; then
+  echo "myfi-venv-ensure: toolkit venv up to date (pyproject.toml unchanged)"
+  exit 0
+fi
+
+if ! command -v poetry >/dev/null 2>&1; then
+  echo "myfi-venv-ensure: poetry not found on PATH — skipping venv install (CLI/MCP wrappers fall back to python3 -m)" >&2
+  exit 0
+fi
+
+echo "myfi-venv-ensure: installing/refreshing myfi_toolkit venv via poetry..."
+poetry -C "$TOOLKIT_DIR" install --no-interaction
+
+cp "$PYPROJECT" "$STAMP_FILE"
+echo "myfi-venv-ensure: done"

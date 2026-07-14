@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "myfi-toolkit"
+version = "0.1.0"
+description = "myfi toolkit — CLI + stdio MCP server for the myfi finance plugin (numpy/pandas/scipy/matplotlib, per-project SQLite, market-data adapters)."
+authors = ["FL03"]
+readme = "README.md"
+packages = [{ include = "myfi_toolkit" }]
+
+[tool.poetry.dependencies]
+python = "^3.14"
+numpy = "^2.4.4"
+pandas = "^3.0.3"
+scipy = "^1.17.1"
+matplotlib = "^3.11.0"
+mcp = "^1.28.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.1"
+ruff = "^0.15"
+
+[tool.poetry.scripts]
+myfi-toolkit = "myfi_toolkit.cli:main"
+myfi-mcp = "myfi_toolkit.mcp_server:main"
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"

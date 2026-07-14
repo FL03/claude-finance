@@ -1,0 +1,13 @@
+{
+  "kind": "plan_pipeline",
+  "subject": "The plan artifact produced by /myfi:plan — the synthesized output of the full flock dispatch (@advisor decomposes -> @quant/@worker produce -> @auditor gates PASS/REDO -> @designer finalizes), assembled by @advisor into one client-ready plan.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "correct-dispatch-order", "weight": 2, "desc": "Reflects the pipeline actually running in order (decompose -> produce -> audit-gate -> finalize) — every cited stage's output is present, and nothing is finalized or presented as audited before an @auditor PASS is evident." },
+    { "key": "synthesis-quality",      "weight": 2, "desc": "Reads as one coherent plan assembled from the flock's stages, not a copy-pasted concatenation of each specialist's raw output with no connective synthesis." },
+    { "key": "goal-alignment",         "weight": 1, "desc": "Ties every step back to the client's stated goal and horizon, not a generic template plan." },
+    { "key": "risk-disclosed",         "weight": 1, "desc": "States the risks @auditor surfaced (or confirms none were found) alongside the recommendation, not an upside-only pitch." }
+  ],
+  "guidance": "Reward a plan that visibly reflects every pipeline stage in order, reads as one synthesized voice rather than stitched specialist transcripts, ties every step to the client's goal, and discloses the audited risks plainly. Penalize a plan that skips or misorders a stage (e.g. finalizes before an audit gate, or never shows @auditor's involvement), reads as raw unsynthesized specialist output, drifts from the stated goal, or omits risk disclosure."
+}
