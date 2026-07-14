@@ -231,7 +231,7 @@ Full schema: [`docs/configuration.md`](docs/configuration.md).
 
 ## Versioning
 
-Semantic versioning. Current version: **0.0.0**, the first complete, installable release. See
+Semantic versioning. Current version: **0.0.1**, the first complete, installable release. See
 [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Contributing
