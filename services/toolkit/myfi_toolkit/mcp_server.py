@@ -1,11 +1,11 @@
-"""myfi_toolkit.mcp_server — stdio MCP server exposing the myfi toolkit's tools.
+"""myfi_toolkit.mcp_server -- stdio MCP server exposing the myfi toolkit's tools.
 
 Registers the toolkit's tools with FastMCP and serves them over stdio
-(discovery-packaging finding: official `mcp` SDK, FastMCP, stdio transport —
+(discovery-packaging finding: official `mcp` SDK, FastMCP, stdio transport --
 `.mcp.json` at the plugin root points `bin/myfi-mcp` at `main()` below).
 Business logic lives in `myfi_toolkit.{tools,marketdata,myctx}`; this module
 only wires it to the MCP protocol, so it is not a fast-gate module (the `mcp`
-import here is expected and fine — only `myfi_toolkit.cli` stays import-light).
+import here is expected and fine -- only `myfi_toolkit.cli` stays import-light).
 
 The tool set mirrors the CLI verbs so an agent reaches the SAME logic whether it
 calls the MCP tool (`mcp__plugin_myfi_myfi-toolkit__<tool>`) or shells to the CLI.
@@ -34,14 +34,11 @@ def quote(symbol: str) -> dict[str, object]:
     Uses the provider named by MYFI_MARKETDATA_PROVIDER, defaulting to the
     research-degrade source when unset (self-contained, no API key required).
     """
-    from dataclasses import asdict, is_dataclass
-
     from myfi_toolkit import marketdata
 
-    q = marketdata.default_source().quote(symbol)
-    if is_dataclass(q):
-        return asdict(q)
-    return {"symbol": symbol, "value": str(q)}
+    # Quote.to_dict() isoformats `asof` so the payload is plain-JSON-serializable
+    # and identical to the CLI's `quote` output; asdict() would leak a raw datetime.
+    return marketdata.default_source().quote(symbol).to_dict()
 
 
 def _db_state(use_global: bool = False, apply_migrations: bool = True) -> dict[str, object]:

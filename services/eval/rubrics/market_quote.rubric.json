@@ -1,11 +1,11 @@
 {
   "kind": "market_quote",
-  "subject": "A market quote returned by the myfi-toolkit `quote <symbol>` CLI/MCP surface (myfi_toolkit.marketdata) — the response an agent receives back after asking for a symbol's price.",
+  "subject": "A market quote returned by the myfi-toolkit `quote <symbol>` CLI/MCP surface (myfi_toolkit.marketdata) -- the response an agent receives back after asking for a symbol's price.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
     { "key": "quote-plausibility", "weight": 2, "desc": "The price, currency, and symbol are internally consistent and plausible for the asked-for instrument, not a nonsense or wildly implausible value." },
-    { "key": "source-honesty",     "weight": 2, "desc": "The `source` field and any accompanying text accurately represent where the price came from — a research/placeholder quote never dresses itself up as a live, paid-feed price." },
+    { "key": "source-honesty",     "weight": 2, "desc": "The `source` field and any accompanying text accurately represent where the price came from -- a research/placeholder quote never dresses itself up as a live, paid-feed price." },
     { "key": "field-completeness", "weight": 1, "desc": "symbol/price/currency/asof/source are all present and well-formed, no null, empty, or missing fields." }
   ],
   "guidance": "Reward a quote response that is internally consistent, honest about its own provenance, and structurally complete. Penalize implausible prices, a source label that overstates confidence or freshness, or missing/null fields."

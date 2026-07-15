@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# W4-agents-worker-trader structural gate — @worker (bounded catch-all) +
+# W4-agents-worker-trader structural gate -- @worker (bounded catch-all) +
 # @trader (scaffold-only, no live exec). This IS the unit's [ACCEPTANCE]
 # predicate plus the "no executable surface" regression test (seed §11's
 # trader-boundary open question, sharpened to a `tools:`-line banned-
@@ -16,7 +16,7 @@ T=agents/trader.md
 [ -f "$W" ] && ok "agents/worker.md present" || { bad "agents/worker.md missing"; echo FAIL; exit 1; }
 [ -f "$T" ] && ok "agents/trader.md present" || { bad "agents/trader.md missing"; echo FAIL; exit 1; }
 
-# Frontmatter shape: name, description, when-to-use, tools: — both agents.
+# Frontmatter shape: name, description, when-to-use, tools: -- both agents.
 python3 - "$W" "$T" <<'PY'
 import re, sys
 for path in sys.argv[1:]:

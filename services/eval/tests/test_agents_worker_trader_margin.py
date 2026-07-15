@@ -3,14 +3,14 @@ unit's [EVALS] in the plan): with MYFI_LLM_MOCK staging plausible judge
 scores, the deterministic harness scores the good `@worker` task output above
 the worker_task rubric threshold and the bad one below, and separately scores
 the good `@trader` scaffold report above the trader_scaffold threshold and the
-bad one (a trader that attempts a live order) below it — each pair separated
+bad one (a trader that attempts a live order) below it -- each pair separated
 by a clear margin.
 
 The live lane runs the SAME goldens through a real local-Claude-Code judge:
   MYFI_EVAL_LIVE=1 bin/myfi-eval run --kind=worker_task \\
       --input-file=agents/evals/worker_good.md
   (and worker_bad.md, trader_good.md, trader_bad.md against trader_scaffold)
-— excluded from the gate because it spends LLM calls. stdlib unittest, mock
+-- excluded from the gate because it spends LLM calls. stdlib unittest, mock
 seam, <2s. Mirrors services/eval/tests/test_skill_myfi_margin.py.
 """
 

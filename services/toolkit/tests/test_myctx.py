@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
+import time
 from pathlib import Path
 
 import pytest
@@ -176,11 +177,86 @@ def test_baseline_checksum_is_sha256_of_the_sql(tmp_path: Path) -> None:
 
 
 def test_current_version_reports_zero_pre_bootstrap(tmp_path: Path) -> None:
+    """`current_version()` reports 0 pre-bootstrap and the packaged schema's
+    highest version (currently 2: 0001_init.sql + migrations/
+    0002_v_mem_recent_7d_updated_at.sql) once `migrate.run()` has applied
+    every migration on disk -- not hard-coded to 1, so this doesn't need to
+    change every time a new migration ships."""
     conn = _connect(tmp_path, "fresh.db")
     try:
         assert migrate.current_version(conn) == 0
         migrate.run(conn)
-        assert migrate.current_version(conn) == 1
+        expected_version = max(v for v, _ in migrate._discover(migrate._SCHEMA_ROOT))
+        assert migrate.current_version(conn) == expected_version
+    finally:
+        conn.close()
+
+
+def test_v_mem_recent_7d_is_selectable(tmp_path: Path) -> None:
+    """`v_mem_recent_7d`'s `unixepoch()` body must actually be SELECTable on a
+    freshly migrated db -- no other test exercises this view at all."""
+    conn = _connect(tmp_path, "view_selectable.db")
+    try:
+        migrate.run(conn)
+        rows = conn.execute("SELECT * FROM v_mem_recent_7d").fetchall()
+        assert rows == []
+    finally:
+        conn.close()
+
+
+def test_v_mem_recent_7d_resurfaces_refreshed_prior_past_7_days(tmp_path: Path) -> None:
+    """Regression for the IMPROVE-loop recurrence bug (skills/improve/SKILL.md
+    §Store/§Where the mechanism lives): `v_mem_recent_7d` must filter and
+    order by `updated_at` ("last touched"), not `created_at`.
+
+    `hooks/scripts/adaptation_capture.sh` dedups a recurring `audit_findings`
+    concern by refreshing ONLY `updated_at` on the existing `mem_entries` row
+    -- it never rewrites `created_at`. A view keyed on `created_at` would
+    therefore never re-surface a prior first stored more than 7 days ago even
+    though it keeps recurring (the exact bug that defeated the
+    dedup-refresh-then-reinject cycle). This test ages a prior's `created_at`
+    to 8 days ago, sets `updated_at` to now (simulating exactly what the
+    harvest hook does on recurrence), and asserts it still surfaces.
+    """
+    conn = _connect(tmp_path, "recurrence.db")
+    try:
+        migrate.run(conn)
+
+        now = int(time.time())
+        eight_days_ago = now - 8 * 86400
+
+        conn.execute(
+            "INSERT INTO projects (id, name, root_path, metadata, created_at, updated_at) "
+            "VALUES (?,?,?,?,?,?)",
+            ("proj-recur", "myfi", "/tmp/proj-recur", None, eight_days_ago, now),
+        )
+        conn.execute(
+            "INSERT INTO mem_entries "
+            "(id, project_id, kind, title, body, tags, pinned, source_path, "
+            "created_at, updated_at) VALUES (?,?,?,?,?,?,0,?,?,?)",
+            (
+                "mem-recur",
+                "proj-recur",
+                "prior",
+                "prior: recurring concern",
+                "seen again this sprint",
+                "[]",
+                None,
+                eight_days_ago,
+                now,
+            ),
+        )
+        conn.commit()
+
+        rows = conn.execute(
+            "SELECT id FROM v_mem_recent_7d WHERE project_id = ?", ("proj-recur",)
+        ).fetchall()
+
+        assert [row[0] for row in rows] == ["mem-recur"], (
+            "a prior created 8 days ago but refreshed (updated_at=now) on recurrence "
+            "must still surface in v_mem_recent_7d -- if this fails, the view "
+            "regressed back to filtering/ordering by created_at"
+        )
     finally:
         conn.close()
 
@@ -250,6 +326,10 @@ def test_db_init_end_to_end_creates_db_and_is_idempotent(
 
 
 def test_db_version_subcommand(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+    """`db version` prints the packaged schema's highest version -- derived
+    from disk (not hard-coded to 1), so this doesn't need to change every
+    time a new migration ships (currently 2: 0001_init.sql + migrations/
+    0002_v_mem_recent_7d_updated_at.sql)."""
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("PWD", str(tmp_path))
     db.dispatch(argparse.Namespace(sub="init", use_global=False))
@@ -258,5 +338,6 @@ def test_db_version_subcommand(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, 
     exit_code = db.dispatch(argparse.Namespace(sub="version", use_global=False))
     out = capsys.readouterr().out.strip()
 
+    expected_version = max(v for v, _ in migrate._discover(migrate._SCHEMA_ROOT))
     assert exit_code == 0
-    assert out == "1"
+    assert out == str(expected_version)

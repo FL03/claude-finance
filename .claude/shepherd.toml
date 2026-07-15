@@ -1,4 +1,4 @@
-# Minimal shepherd configuration — a generic project bootstrap.
+# Minimal shepherd configuration -- a generic project bootstrap.
 #
 # This is the smallest viable shepherd.toml. It assumes a Rust project
 # with the framework's mod-10 sprint convention and three canonical gates.
@@ -13,7 +13,7 @@ language = "python"   # Python3/poetry toolkit is the testable surface; the plug
 [branching]
 patch_branch_pattern  = "v{X}.{Y}.{Z}"
 sprint_branch_pattern = "v{X}.{Y}.{Z}-dev.{N}"
-# Filesystem-slug forms (v5.1.1+) — dots collapsed for filename safety.
+# Filesystem-slug forms (v5.1.1+) -- dots collapsed for filename safety.
 # Branches keep dots (git-valid); seed/plan filenames use slug form.
 patch_slug_pattern    = "v{X}{Y}{Z}"
 sprint_slug_pattern   = "v{X}{Y}{Z}-dev{N}"
@@ -22,14 +22,16 @@ main_branch           = "main"
 release_tag_pattern   = "v{X}.{Y}.{Z}"
 
 [gates]
-# Python/poetry toolkit lives at services/toolkit/ (locked in the v0.0.0 seed).
-# Gates go green once dev.0 scaffolds it; they are the foundation sprint's acceptance.
-check  = "poetry -C services/toolkit run pytest -q"
+# check runs the full release gate (bin/myfi-test: toolkit pytest + services
+# unittest + hooks + integration), so root's between-wave gate covers all four
+# lanes, not just the toolkit pytest lane. lint/format stay scoped to the
+# poetry toolkit (the only ruff-managed Python surface).
+check  = "bash bin/myfi-test"
 lint   = "poetry -C services/toolkit run ruff check ."
 format = "poetry -C services/toolkit run ruff format --check ."
 
 [dups]
-# Field-shape similar-struct detection (shctx dups, #157) — catches the
+# Field-shape similar-struct detection (shctx dups, #157) -- catches the
 # renamed-shadow duplicate that name-matching dedup misses. Defaults shown;
 # uncomment only to change. Keys are dups_*-prefixed (cfg_get is section-agnostic).
 # dups_hook        = "warn"   # PreToolUse(Write|Edit): off | warn (default) | block
@@ -71,17 +73,17 @@ chronic_threshold_patches = 2
 
 [release]
 driver = "operator"
-# devlast_guard = "block"     # block (default) | warn | off — refuse to cut dev.{sprints_per_patch}
+# devlast_guard = "block"     # block (default) | warn | off -- refuse to cut dev.{sprints_per_patch}
 
 [autorun]
 # Unattended sequential walk (/shepherd:spawn --scope patch | --auto). Defaults
-# below reproduce pre-v6.1.5 behavior — uncomment only to change it.
+# below reproduce pre-v6.1.5 behavior -- uncomment only to change it.
 # min_grade          = "B"        # letter-grade floor for continuing the walk
 # on_grade_floor     = "abort"    # abort (default) | pause | continue
 # inter_sprint_pause = "brief"    # brief (default ~5s window) | signoff | none
 
 [spawn]
-# max_parallel       = 4          # int 2..N — upper bound on --parallel fan-out (default 4)
+# max_parallel       = 4          # int 2..N -- upper bound on --parallel fan-out (default 4)
 # dashboard_cadence  = "3m"       # default interval for `/shepherd:loop <c> shctx dash`
 
 [close]
@@ -96,7 +98,7 @@ driver = "operator"
 auto_capabilities = "on"
 
 [tmux]
-# pane_cleanup = "on"         # on (default) | off — reap closed-teammate panes at SessionEnd
+# pane_cleanup = "on"         # on (default) | off -- reap closed-teammate panes at SessionEnd
 
 [hooks]
 on_every_dispatch = ["code-style"]
@@ -112,5 +114,5 @@ on_every_dispatch = ["code-style"]
 # Controls both the SessionStart(compact) path and the UserPromptSubmit fallback.
 # rehydrate        = "on"   # on (default) | off
 # loop_max_default = 8      # default max_iterations for FOCUS-LOOP (Pattern 6)
-# heartbeat_interval = ""   # v6.2.2 — deterministic wall-clock re-anchor in a long stretch (native /loop)
-# heartbeat_actions  = 20   # v6.2.2 — soft self-prompt: re-anchor after ~N actions (0 disables)
+# heartbeat_interval = ""   # v6.2.2 -- deterministic wall-clock re-anchor in a long stretch (native /loop)
+# heartbeat_actions  = 20   # v6.2.2 -- soft self-prompt: re-anchor after ~N actions (0 disables)

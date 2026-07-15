@@ -1,15 +1,15 @@
 ---
-title: v0.0.0 Dispatch Brief — deferred spawn resume (quota-gated)
+title: v0.0.0 Dispatch Brief -- deferred spawn resume (quota-gated)
 kind: dispatch-brief
 date: 2026-07-13
 author: shepherd-root (opus) @ /shepherd:spawn
-fires_via: scheduled-task (local, one-shot) — reset+margin 18:50 CDT
+fires_via: scheduled-task (local, one-shot) -- reset+margin 18:50 CDT
 reason: weekly quota at ~5% at spawn time; reset ~18:43 CDT. Cheap preflight done now; expensive dispatch deferred.
 ---
 
-# READ THIS FIRST — you are the resumed root-shepherd for the myfi v0.0.0 spawn
+# READ THIS FIRST -- you are the resumed root-shepherd for the myfi v0.0.0 spawn
 
-The quota has reset. **Run the FULL dispatch now — do NOT defer again.** A prior root-shepherd
+The quota has reset. **Run the FULL dispatch now -- do NOT defer again.** A prior root-shepherd
 session did the cheap deterministic preflight and locked the scope; you pick up at dispatch.
 
 ## Locked scope decision (do NOT re-litigate)
@@ -18,22 +18,22 @@ session did the cheap deterministic preflight and locked the scope; you pick up 
   `v0.0.0` is ONE patch on ONE branch, `kind: sprint-seed`, **no `-dev.N` fan-out** (operator decision).
 - Therefore **NO `confirm version` / `confirm minor` gate applies.** Do not ask for it.
 - One XL sprint, **6 internal waves**, graph `W1 → [W2 ∥ W3] → W4 → W5 → W6` (seed §7, non-binding).
-- Lanes are the engineer's call — decompose from file-disjoint root component dirs
+- Lanes are the engineer's call -- decompose from file-disjoint root component dirs
   (`agents/` ∥ `skills/` ∥ `commands/` ∥ `services/` ∥ `hooks/` ∥ `bin/` ∥ `docs/`). Lane count is
   CONSTANT across waves once set (pipeline.md §Lane law).
 
-## Preflight already cleared (17:28 CDT, do not fully redo — spot-check only)
+## Preflight already cleared (17:28 CDT, do not fully redo -- spot-check only)
 
 - `shctx` present at `/Users/jo3/.local/bin/shctx`.
 - `shepherd.toml` at `.claude/shepherd.toml` (exists; Check 4 satisfied).
-- Seed: `.shepherd/docs/plans/v000.seed.md` (`status: ready-for-engineer`). **No plan yet** — engineer authors it.
+- Seed: `.shepherd/docs/plans/v000.seed.md` (`status: ready-for-engineer`). **No plan yet** -- engineer authors it.
 - Model pins: `conductor=sonnet`, `engineer=opus[1m]`, `critic/discovery/coder/auditor/worker=sonnet`.
-  Pin each spawned role via `shctx models resolve <role>` — do NOT rely on frontmatter propagation.
+  Pin each spawned role via `shctx models resolve <role>` -- do NOT rely on frontmatter propagation.
 - Lock: FREE. Live teammates: NONE (`shctx teammate liveness` empty, `shctx dash` → "TEAMMATES none live").
 - No rebase/merge in progress. No `.artifacts/shepherd.lock`.
-- Priors: empty (first cycle) → resource estimate is "(defaults — no priors yet)".
+- Priors: empty (first cycle) → resource estimate is "(defaults -- no priors yet)".
 
-## BLOCKER to clear FIRST — stale team configs (Check 3 is HARD)
+## BLOCKER to clear FIRST -- stale team configs (Check 3 is HARD)
 
 `~/.claude/teams/` holds **4 stale team configs from prior sessions** (none live per `shctx teammate
 liveness`):
@@ -76,22 +76,22 @@ confirmed non-live; if any is unexpectedly live, STOP and surface to the operato
 10. Drive the active-drive loop (wake → act → probe; never passive-wait). Monitor `TeammateIdle` /
     `TaskCompleted`. Triage escalations by `halt_code`. Alert on >5 min heartbeat staleness.
     **Commit at EVERY wave boundary immediately**: `git commit -m "chore(v0.0.0/wave-K): wave-complete
-    via spawn"` — the one-wave loss horizon holds ONLY if a commit lands at every boundary.
+    via spawn"` -- the one-wave loss horizon holds ONLY if a commit lands at every boundary.
 11. At CLOSE-FINALIZE: run the merge, write `.shepherd/docs/reports/2026-07-13-v000-close.md`, run
     `/shepherd:cleanup`, report DONE with restart instructions.
 
 ## Gate discipline for lanes (conductor.md owns this)
 
 cargo `--frozen`, `CARGO_TARGET_DIR=target/.lanes/<lane-slug>`, gates SERIAL, `cargo fix` FORBIDDEN.
-NOTE: v0.0.0 is a **Python/poetry + markdown-plugin** sprint (toolkit at `services/toolkit/`), not Rust —
+NOTE: v0.0.0 is a **Python/poetry + markdown-plugin** sprint (toolkit at `services/toolkit/`), not Rust --
 gates are `poetry run pytest` + the seed's runnable `**Acceptance:**` predicates (grep/count/CLI-exit) +
 `bash hooks/tests/run.sh`. Tests + evals ship in the same commit (`CLAUDE.md` §Tests and evals).
 
 ## References
 
 - Command: `/shepherd:spawn` (re-invoke to reload full instructions).
-- Root profile: `agents/shepherd.md` (adopt as system-prompt addendum) — resolve the path via the
+- Root profile: `agents/shepherd.md` (adopt as system-prompt addendum) -- resolve the path via the
   shepherd plugin; the spawn command names it.
-- Seed: `.shepherd/docs/plans/v000.seed.md` (the mandate — 16 issue-anchored deliverables, 6 waves).
+- Seed: `.shepherd/docs/plans/v000.seed.md` (the mandate -- 16 issue-anchored deliverables, 6 waves).
 - Project law: `CLAUDE.md` (services-first, LLM-via-local-Claude-Code, tests+evals same commit).
 - Discovery harvest: `.shepherd/docs/reports/2026-07-13-{planter-mesh,discovery-packaging,discovery-harvest,discovery-marketdata}.md`.

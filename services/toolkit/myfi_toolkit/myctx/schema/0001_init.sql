@@ -92,6 +92,6 @@ CREATE VIEW v_mem_recent_7d AS
 -- The schema_versions row for this baseline is recorded by migrate.py, which
 -- computes checksum = sha256(this file's bytes) uniformly for every applied
 -- migration. Do NOT self-insert here (a literal would shadow the real hash and
--- migrate.py's INSERT OR IGNORE would silently no-op) — see test_myctx.py.
+-- migrate.py's INSERT OR IGNORE would silently no-op) -- see test_myctx.py.
 
 COMMIT;

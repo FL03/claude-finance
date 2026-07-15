@@ -13,12 +13,13 @@ one permanently-closed scaffold (`trade`).
 ## `/myfi:analyze`
 
 ```text
-/myfi:analyze <subject> [--agent=advisor|quant|worker] [--out=<path>] [--json]
+/myfi:analyze <subject> [--agent=quant|worker] [--out=<path>] [--json]
 ```
 
 - `<subject>` (required, free text) : the question or lookup.
-- `--agent` (default `advisor`) : which single flock agent runs the pass. `quant` for a
-  modeling-heavy lookup, `worker` for a routine aggregation that needs no judgment.
+- `--agent` (default `quant`) : which single flock agent runs the pass. `quant` for a
+  modeling-heavy lookup, `worker` for a routine aggregation that needs no judgment. `@advisor` is
+  never valid here -- it is the flock's sole dispatcher, reach for `/myfi:plan` instead.
 - `--out` (default `.myfi/reports/<slug>-<timestamp>.md`) : where the report lands.
 - `--json` : also emit a machine-readable `<out>.json` sidecar.
 
@@ -36,9 +37,9 @@ distinction is the entire reason to reach for `/myfi:plan` instead.
 - `--horizon` (optional, e.g. `10y`, `18mo`) : the planning horizon, passed through to `@advisor`'s
   decomposition.
 - `--out` (default `.myfi/reports/plan-<slug>-<timestamp>.md`).
-- `--redo-cap` (default `3`) : the `@auditor` REDO ceiling for this run. A run that exhausts the
-  cap halts rather than shipping an unaudited plan, never raise this without an explicit operator
-  override.
+- `--redo-cap` (default `3`, hard ceiling `3`) : the `@auditor` REDO count for this run. A value
+  above `3` clamps down to `3`, there is no operator override past the hard cap. A run that exhausts
+  the cap halts rather than shipping an unaudited plan.
 
 `@advisor` decomposes the goal, dispatches `@quant`/`@worker` to produce, `@auditor` adversarially
 gates every draft (Hypothesis + Falsification + Confidence, PASS/REDO), and `@designer` performs
@@ -66,12 +67,12 @@ anything ships. Never improvises a tax rule the skill does not name.
 ```
 
 SCAFFOLD, read that literally. `<allowed-tools>` names only read/research tools plus the toolkit's
-read-only `quote`, no order, exchange, or execution tool is wired into this command in v0.0.0,
-anywhere. It walks a documented seven-step cycle (assess, discover, rank, gate-check, **halt at the
-authorization gate**, report, idle) and always stops at step 5, there is no "open" state this
-version can reach. Opening that gate in a future release is an explicit operator decision, not
-something this command can grow into on its own. See [`flock.md`](flock.md#trader-read-literally)
-for the agent-side twin of this same boundary.
+read-only `quote`, no order, exchange, or execution tool is wired into this command in this
+release, anywhere. It walks a documented seven-step cycle (assess, discover, rank, gate-check,
+**halt at the authorization gate**, report, idle) and always stops at step 5, there is no "open"
+state this version can reach. Opening that gate in a future release is an explicit operator
+decision, not something this command can grow into on its own. See
+[`flock.md`](flock.md#trader-read-literally) for the agent-side twin of this same boundary.
 
 ## Report artifacts
 

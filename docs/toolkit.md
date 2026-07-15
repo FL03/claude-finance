@@ -43,10 +43,10 @@ avoids a subprocess and returns a typed object instead of a string to parse.
 
 A per-project registry at `.myfi/myfi.db` (git-ignored, WAL journal mode, foreign keys on), plus an
 optional global `~/.myfi/global.db` for state you want to share across projects. Both are gap-fill
-migrated from `myfi_toolkit/myctx/schema/*.sql`, `0001_init.sql` is the v0.0.0 baseline:
+migrated from `services/toolkit/myfi_toolkit/myctx/schema/*.sql`, `0001_init.sql` is the v0.0.0 baseline:
 `projects`, `sessions`, `mem_entries` (doctrine/notes/decisions/priors, with a `prior` kind baked in
 from the start), `discovery_findings`, and `audit_findings`, plus a `v_mem_recent_7d` view. This is
-what backs the `improve` skill's harvest/store/inject/cite loop, see [`flock.md`](flock.md#the-four-skills).
+what backs the `improve` skill's harvest/store/inject/cite loop, see [`flock.md`](flock.md#the-five-skills).
 
 `skills/improve/SKILL.md` reads and writes this database directly through `myfi_toolkit.myctx`,
 there is no separate client library, the schema module is the client.

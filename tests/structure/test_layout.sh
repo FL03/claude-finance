@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# W1-relocate structural gate — root-level component layout + .mcp.json + no src/.
+# W1-relocate structural gate -- root-level component layout + .mcp.json + no src/.
 # Deterministic, jq/git only, <1s. This IS the unit's acceptance predicate.
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)"
@@ -16,7 +16,7 @@ bad(){ echo "FAIL: $1"; fail=1; }
 [ ! -d src/skills/plan ] && ok "src/skills/plan removed"        || bad "src/skills/plan still present"
 jq empty .mcp.json 2>/dev/null && ok ".mcp.json valid json"     || bad ".mcp.json invalid json"
 
-# ${CLAUDE_PLUGIN_ROOT} must stay a literal token — single-quote the expected value.
+# ${CLAUDE_PLUGIN_ROOT} must stay a literal token -- single-quote the expected value.
 cmd="$(jq -r '.mcpServers["myfi-toolkit"].command' .mcp.json 2>/dev/null)"
 [ "$cmd" = '${CLAUDE_PLUGIN_ROOT}/bin/myfi-mcp' ] \
   && ok ".mcp.json registers myfi-toolkit -> bin/myfi-mcp" \

@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "myfi-toolkit"
-version = "0.1.0"
-description = "myfi toolkit — CLI + stdio MCP server for the myfi finance plugin (numpy/pandas/scipy/matplotlib, per-project SQLite, market-data adapters)."
+version = "0.0.2"
+description = "myfi toolkit -- CLI + stdio MCP server for the myfi finance plugin (numpy/pandas/scipy/matplotlib, per-project SQLite, market-data adapters)."
 authors = ["FL03"]
 readme = "README.md"
 packages = [{ include = "myfi_toolkit" }]
 
 [tool.poetry.dependencies]
-python = "^3.14"
+python = "^3.12"
 numpy = "^2.4.4"
 pandas = "^3.0.3"
 scipy = "^1.17.1"

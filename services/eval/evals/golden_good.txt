@@ -12,7 +12,7 @@ Recommendation, in order:
    (currently paying ~4.3% APY) until the balance reaches $18,600 (6 months of essential
    expenses). At the current contribution rate this closes the gap in about 16 months.
 2. Once the emergency fund target is hit, raise the 401(k) contribution from 4% to 6% to
-   capture the full employer match — this is a guaranteed 50% return on the marginal dollar
+   capture the full employer match -- this is a guaranteed 50% return on the marginal dollar
    and should happen before any other discretionary saving.
 3. Re-evaluate the target-date fund's 0.42% expense ratio against the plan's available S&P 500
    index option (0.03%) in twelve months; a lower-cost swap is likely worth ~0.35pp/year but

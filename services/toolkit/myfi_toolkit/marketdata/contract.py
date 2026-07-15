@@ -1,10 +1,10 @@
-"""myfi_toolkit.marketdata.contract — the MarketDataSource protocol + Quote shape.
+"""myfi_toolkit.marketdata.contract -- the MarketDataSource protocol + Quote shape.
 
 Every market-data provider (the research-degrade default in ``research.py``, and
 the deferred concrete providers registered in ``registry.py``) implements one
 structural contract: ``quote(symbol) -> Quote``. Defined as a
 ``typing.Protocol`` rather than an ABC so a provider needs no shared base
-class — it only needs the method, which keeps the deferred provider stubs in
+class -- it only needs the method, which keeps the deferred provider stubs in
 ``registry.py`` (and any future concrete provider) trivially conformant.
 
 Stdlib only. This module sits behind the CLI's lazy-import boundary
@@ -27,7 +27,7 @@ class Quote:
     """A single market quote, typed and provider-agnostic.
 
     ``source`` names the provider that produced the quote (e.g. ``"research"``,
-    ``"finnhub"``) — callers use it to judge trust and freshness rather than
+    ``"finnhub"``) -- callers use it to judge trust and freshness rather than
     assuming every quote came from a live, paid feed.
     """
 
@@ -56,7 +56,7 @@ class MarketDataSource(Protocol):
         """Return a :class:`Quote` for ``symbol``.
 
         Implementations MAY raise ``NotImplementedError`` for a provider that
-        is registered but not yet wired — see ``registry.py``'s deferred
+        is registered but not yet wired -- see ``registry.py``'s deferred
         provider stubs (Finnhub / yfinance / FRED).
         """
         ...

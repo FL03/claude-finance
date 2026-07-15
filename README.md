@@ -1,8 +1,8 @@
 # myfi
 
-[![GitHub License](https://img.shields.io/github/license/FL03/myfi?style=for-the-badge&logo=github)](LICENSE)
-[![GitHub Release](https://img.shields.io/github/v/release/FL03/myfi?style=for-the-badge&logo=github)](https://github.com/FL03/myfi/releases)
-[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-d97757?style=for-the-badge)](https://github.com/FL03/myfi)
+[![GitHub License](https://img.shields.io/github/license/FL03/claude-finance?style=for-the-badge&logo=github)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/FL03/claude-finance?style=for-the-badge&logo=github)](https://github.com/FL03/claude-finance/releases)
+[![Claude Code plugin](https://img.shields.io/badge/Claude_Code-plugin-d97757?style=for-the-badge)](https://github.com/FL03/claude-finance)
 
 ---
 
@@ -90,7 +90,7 @@ advisor-led pipeline with the compliance gate, `/myfi:taxes` for the tax-year wo
 ### From the marketplace (recommended)
 
 ```text
-/plugin marketplace add FL03/myfi
+/plugin marketplace add FL03/claude-finance
 /plugin install myfi@fl03
 ```
 
@@ -99,12 +99,12 @@ Update later with `/plugin update myfi@fl03`.
 ### Personal symlink or per-project pin
 
 ```bash
-git clone https://github.com/FL03/myfi.git ~/src/FL03/myfi
-ln -s ~/src/FL03/myfi ~/.claude/plugins/myfi      # personal
-ln -s /path/to/FL03/myfi .claude-plugin/myfi      # per-project (mkdir -p .claude-plugin first)
+git clone https://github.com/FL03/claude-finance.git ~/src/FL03/claude-finance
+ln -s ~/src/FL03/claude-finance ~/.claude/plugins/myfi      # personal
+ln -s /path/to/FL03/claude-finance .claude-plugin/myfi      # per-project (mkdir -p .claude-plugin first)
 ```
 
-No build system. Runtime needs: `git`, `bash`, Python 3.14+, `poetry` for the toolkit venv (falls
+No build system. Runtime needs: `git`, `bash`, Python 3.12+, `poetry` for the toolkit venv (falls
 back to a `PYTHONPATH` install if absent), and `claude` on `PATH` for the LLM law below. No API key
 is required to get started. Full detail: [`docs/install.md`](docs/install.md).
 
@@ -180,7 +180,9 @@ table: [`docs/marketdata.md`](docs/marketdata.md).
 
 Create `.claude/myfi.toml` at the repo root, a template lives at
 [`examples/minimal/myfi.toml`](examples/minimal/myfi.toml). No section is required, every key has a
-working default.
+working default. It's parsed by `myfi_toolkit.config` and consulted by the toolkit, market-data
+adapter selection, and `services/llm`'s model default -- each key falls back to an env var
+(`MYFI_LLM_MODEL`, `MYFI_MARKETDATA_PROVIDER`) then a hardcoded default if unset here.
 
 ```toml
 [toolkit]
@@ -193,7 +195,7 @@ model = "claude-opus-4-8"
 provider = "research"
 ```
 
-Full schema: [`docs/configuration.md`](docs/configuration.md).
+Full schema and precedence order: [`docs/configuration.md`](docs/configuration.md).
 
 ---
 
@@ -231,7 +233,8 @@ Full schema: [`docs/configuration.md`](docs/configuration.md).
 
 ## Versioning
 
-Semantic versioning. Current version: **0.0.1**, the first complete, installable release. See
+Semantic versioning. Current version: **0.0.2**. The first complete, installable release was
+**0.0.0** (the foundation); 0.0.1 renamed the repository and 0.0.2 is a version bump. See
 [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Contributing

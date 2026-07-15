@@ -1,6 +1,6 @@
 ---
 name: taxes
-description: Tax-workflow pipeline -- gathers account activity, classifies income/gains, routes each item to its IRS form, computes an estimate, flags the filing deadline, clears the @auditor compliance gate, and emits a filing-actionable summary. Loads skills/taxes/SKILL.md first, then @auditor before anything ships.
+description: Tax-workflow pipeline -- gathers account activity, classifies income/gains, routes each item to its IRS form, computes an estimate, flags the filing deadline, clears the @auditor compliance gate, and emits a filing-actionable summary. Loads skills/myfi/SKILL.md first, then skills/taxes/SKILL.md, then @auditor before anything ships.
 argument-hint: "[tax_year] [--account taxable|ira|401k|hsa] [--dry-run]"
 allowed-tools: Read, Grep, Glob, Bash, Skill, Agent, Write, mcp__plugin_myfi_myfi-toolkit__quote, mcp__plugin_myfi_myfi-toolkit__db_init, mcp__plugin_myfi_myfi-toolkit__db_migrate, mcp__plugin_myfi_myfi-toolkit__db_version
 ---

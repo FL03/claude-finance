@@ -1,7 +1,7 @@
 ---
 name: analyze
-description: Single-shot financial report command. Runs the toolkit against a subject, dispatches ONE flock agent pass (default @advisor, or @quant/@worker for a narrower lookup), and writes a report artifact to a path it prints. Use for a cheap one-off report; use /myfi:plan when the goal needs the full advisor-led flock pipeline.
-argument-hint: "<subject> [--agent=advisor|quant|worker] [--out=<path>] [--json]"
+description: Single-shot financial report command. Runs the toolkit against a subject, dispatches ONE flock agent pass (default @quant, or @worker for a narrower lookup), and writes a report artifact to a path it prints. Use for a cheap one-off report; use /myfi:plan when the goal needs the full advisor-led flock pipeline.
+argument-hint: "<subject> [--agent=quant|worker] [--out=<path>] [--json]"
 allowed-tools: Agent, Bash, Read, Grep, Skill, Write, mcp__plugin_myfi_myfi-toolkit__quote, mcp__plugin_myfi_myfi-toolkit__db_init, mcp__plugin_myfi_myfi-toolkit__db_migrate, mcp__plugin_myfi_myfi-toolkit__db_version
 ---
 
@@ -17,9 +17,11 @@ live-HTML/chart artifact rather than a plain markdown report.
 ## Flags
 
 - `<subject>` (required) -- the question or lookup, free text. Everything after the flags.
-- `--agent=advisor|quant|worker` (default `advisor`) -- which single flock agent runs the pass.
-  `advisor` for a general recommendation, `quant` for a modeling-heavy lookup (pricing, a risk
-  metric), `worker` for a routine aggregation/form-fill that does not need judgment.
+- `--agent=quant|worker` (default `quant`) -- which single flock agent runs the pass. `quant` is
+  the honest default for a single-shot modeling report; `worker` for a routine aggregation/form-fill
+  that does not need judgment. `@advisor` is never a valid choice here -- it is the flock's sole
+  dispatcher and its own contract bars single-shot use (`agents/advisor.md`); reach for
+  `/myfi:plan` when the goal needs `@advisor`'s decomposition.
 - `--out=<path>` (default `.myfi/reports/<slug>-<timestamp>.md`) -- where the report artifact is
   written. `<slug>` is the subject, lowercased and dash-joined; `<timestamp>` is
   `date -u +%Y%m%dT%H%M%SZ`.
@@ -31,7 +33,8 @@ live-HTML/chart artifact rather than a plain markdown report.
 Parse `<subject>` and flags; a missing `<subject>` halts with a usage message (this command never
 guesses a subject). Read `skills/myfi/SKILL.md` first -- every invocation orients to the toolkit
 surface, the flock table, and the LLM-routing law before dispatching anything. Resolve `--agent`
-to one of `advisor`/`quant`/`worker`; an unrecognized value halts rather than silently defaulting.
+to one of `quant`/`worker`; an unrecognized value (including `advisor`, which is never valid here)
+halts rather than silently defaulting.
 
 ## Step 1 -- Ground the subject via the toolkit
 
@@ -72,7 +75,8 @@ With `--json`, also print the sidecar path on the following line.
 ## Halt codes
 
 - `ANALYZE-NO-SUBJECT` -- `<subject>` missing or empty.
-- `ANALYZE-BAD-AGENT` -- `--agent` is not one of `advisor`/`quant`/`worker`.
+- `ANALYZE-BAD-AGENT` -- `--agent` is not one of `quant`/`worker` (an explicit `--agent=advisor`
+  triggers this halt, not a silent pass-through -- `@advisor` never runs single-shot).
 - `ANALYZE-WRITE-FAILED` -- the report artifact could not be written to `--out` (permissions,
   missing parent that could not be created).
 

@@ -6,7 +6,7 @@ skill_myfi rubric threshold and the bad one below, separated by a clear margin.
 The live lane runs the SAME goldens through a real local-Claude-Code judge:
   MYFI_EVAL_LIVE=1 bin/myfi-eval run --kind=skill_myfi \\
       --input-file=skills/myfi/evals/good_orientation.md
-(and bad_orientation.md) — excluded from the gate because it spends LLM calls.
+(and bad_orientation.md) -- excluded from the gate because it spends LLM calls.
 stdlib unittest, mock seam, <2s. Mirrors services/eval/tests/test_eval_rubrics.py::GoldenMarginTests.
 """
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# bin/myfi-llm — root wrapper for services/llm/llm.py.
+# bin/myfi-llm -- root wrapper for services/llm/llm.py.
 #
 # Thin dispatcher: no logic of its own beyond resolving the repo root, so the
 # LLM service stays the ONE owner of the model call, the timeout, and the
-# mock seam (CLAUDE.md §LLM access — never a hosted API).
+# mock seam (CLAUDE.md §LLM access -- never a hosted API).
 set -eu -o pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

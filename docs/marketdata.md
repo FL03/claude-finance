@@ -32,13 +32,13 @@ bin/myfi-toolkit quote AAPL
 ```
 
 `default_source()` picks a provider by the `MYFI_MARKETDATA_PROVIDER` env var (equivalent to
-`[marketdata].provider` in `myfi.toml`, see [`configuration.md`](configuration.md#marketdata)),
+`[marketdata].provider` in `.claude/myfi.toml`, see [`configuration.md`](configuration.md#marketdata)),
 falling back to `research` when unset. An unrecognized provider name raises loudly rather than
 silently behaving like the default.
 
 ## Default: the research-degrade source
 
-`research` is the v0.0.0 default and needs no API key, no network credential, no setup at all. It
+`research` is the default for now and needs no API key, no network credential, no setup at all. It
 is a self-contained source that always answers, so a client goal never stalls on missing market
 data infrastructure, at the cost of not being a live, tradeable-grade feed.
 

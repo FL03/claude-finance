@@ -1,5 +1,5 @@
 """Gate: every shipped rubric is structurally valid, and the golden-margin
-proof — with MYFI_LLM_MOCK staged scores, the deterministic harness correctly
+proof -- with MYFI_LLM_MOCK staged scores, the deterministic harness correctly
 discriminates a good advisory from a bad one by a clear margin. A malformed
 rubric would make `eval run` produce garbage scores silently, so the
 structural checks fail loudly instead. stdlib unittest, mock seam, <2s.
@@ -86,7 +86,7 @@ class GoldenMarginTests(unittest.TestCase):
     the good advisory golden above threshold and the bad one below, separated
     by a clear margin. The live lane runs the SAME golden files through a real
     local-Claude-Code judge: `MYFI_EVAL_LIVE=1 bin/myfi-eval run --kind=advisory
-    --input-file=evals/golden_good.txt` (and golden_bad.txt) — not part of the
+    --input-file=evals/golden_good.txt` (and golden_bad.txt) -- not part of the
     gate lane because it spends real LLM calls.
     """
 
@@ -129,7 +129,7 @@ class GoldenMarginTests(unittest.TestCase):
 
     def test_live_lane_strips_a_stray_mock(self) -> None:
         # MYFI_EVAL_LIVE=1 must not let an inherited mock silently fake the
-        # "live" lane — run_judge should ignore MYFI_LLM_MOCK when live=True.
+        # "live" lane -- run_judge should ignore MYFI_LLM_MOCK when live=True.
         # We prove this deterministically: pointing MYFI_LLM_BIN at a fake
         # non-mock claude that echoes a fixed JSON response confirms the
         # mock env var was actually stripped before the llm.py subprocess ran

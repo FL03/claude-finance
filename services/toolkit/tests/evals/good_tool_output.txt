@@ -2,9 +2,9 @@
   "name": "myfi-toolkit",
   "version": "0.1.0",
   "capabilities": [
-    "version — print the toolkit's semantic version",
-    "db init|migrate|version [--global] — per-project/global SQLite registry (myctx, Wave 3)",
-    "quote <symbol> — fetch a market quote via the market-data adapter (Wave 3)",
-    "stats — numpy/pandas/scipy version summary of the active toolkit environment"
+    "version -- print the toolkit's semantic version",
+    "db init|migrate|version [--global] -- per-project/global SQLite registry (myctx, Wave 3)",
+    "quote <symbol> -- fetch a market quote via the market-data adapter (Wave 3)",
+    "stats -- numpy/pandas/scipy version summary of the active toolkit environment"
   ]
 }

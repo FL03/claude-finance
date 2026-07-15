@@ -21,6 +21,7 @@ Deterministic, stdlib-only, <1s, no network, no live LLM call.
 from __future__ import annotations
 
 import json
+import math
 import unittest
 from pathlib import Path
 
@@ -40,12 +41,16 @@ def _weighted_overall(rubric: dict, scores: dict[str, int]) -> int:
     """The eval harness's deterministic verdict math (`services/eval/eval.py`
     `compute_verdict`: ``floor(100 * weighted_sum / (scale * total_weight) + 0.5)``),
     reproduced here so this unit's mock-lane margin needs no sibling service at build time.
+
+    Round-half-up (``floor(x + 0.5)``), not Python's ``round()`` (round-half-to-even) --
+    the harness ports the bash/jq arithmetic exactly, and a `.5` case would silently
+    disagree with the real harness if this reproduction used `round()` instead.
     """
     scale = rubric["scale"]
     dims = rubric["dimensions"]
     total_weight = sum(dim["weight"] for dim in dims)
     weighted_sum = sum(scores[dim["key"]] * dim["weight"] for dim in dims)
-    return round(100 * weighted_sum / (scale * total_weight))
+    return math.floor(100 * weighted_sum / (scale * total_weight) + 0.5)
 
 
 class CloseReportRubricTests(unittest.TestCase):

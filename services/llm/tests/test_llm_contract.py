@@ -1,4 +1,4 @@
-"""Gate: arg/usage contract and error paths — no real claude call.
+"""Gate: arg/usage contract and error paths -- no real claude call.
 
 Covers exit codes 2 (usage) and 4 (runtime), and that a missing claude
 binary fails fast (no hang) rather than exit 3. stdlib unittest, <2s.
@@ -75,7 +75,7 @@ class LlmContractTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 2)
 
     def test_llm_law_no_hosted_api_referenced(self) -> None:
-        # This service is the ONE place a model call is shelled out — assert it
+        # This service is the ONE place a model call is shelled out -- assert it
         # never references a hosted inference endpoint (CLAUDE.md §LLM access).
         # The banned hosts are assembled at runtime (not written as a literal
         # substring here) so this negative assertion doesn't itself trip the

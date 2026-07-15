@@ -5,13 +5,13 @@ output above the taxes_workflow rubric threshold and the bad one (a
 single-step, ungrounded, gate-skipping answer) below it, and separately
 scores the good `/myfi:trade` halt report above the trade_gate rubric
 threshold and the bad one (a report that narrates a filled live order) below
-it — each pair separated by a clear margin.
+it -- each pair separated by a clear margin.
 
 The live lane runs the SAME goldens through a real local-Claude-Code judge:
   MYFI_EVAL_LIVE=1 bin/myfi-eval run --kind=taxes_workflow \\
       --input-file=commands/evals/taxes_good.md
   (and taxes_bad.md, trade_good.md, trade_bad.md against trade_gate)
-— excluded from the gate because it spends LLM calls. stdlib unittest, mock
+-- excluded from the gate because it spends LLM calls. stdlib unittest, mock
 seam, <2s. Mirrors services/eval/tests/test_agents_worker_trader_margin.py.
 """
 

@@ -1,6 +1,6 @@
 ---
 name: compliance
-description: Local-law and regulatory knowledge for the myfi flock's adversarial reviewer. Covers the US-federal baseline an @auditor pass checks (suitability vs fiduciary duty, Reg BI, disclosure, KYC/AML basics, insider trading/MNPI, marketing rules, recordkeeping) and the jurisdiction-honesty discipline that keeps every verdict inside its actual authority. Load before any @auditor compliance pass, and before /myfi:taxes or /myfi:trade run through their compliance gate.
+description: Local-law and regulatory knowledge for the myfi flock's adversarial reviewer. Covers the US-federal baseline an @auditor pass checks (suitability vs fiduciary duty, Reg BI, disclosure, KYC/AML basics, insider trading/MNPI, market manipulation, marketing rules, recordkeeping) and the jurisdiction-honesty discipline that keeps every verdict inside its actual authority. Load before any @auditor compliance pass, and before /myfi:taxes or /myfi:trade run through their compliance gate.
 ---
 
 # COMPLIANCE: regulatory knowledge for the adversarial reviewer
@@ -54,9 +54,9 @@ a silent PASS.
 Every item above maps to a concrete PASS/REDO check, not a vibe: cite the specific claim in the
 subject text, name which numbered item it fails, and state the falsification condition (what
 evidence would change the verdict) per the Hypothesis+Falsification+Confidence triple
-(`skills/shepherd/references/flock.md §@auditor` for the shepherd precedent this ports). A finding
-with no falsification condition is not a finding. It is an opinion, and it does not belong in an
-`audit_findings` row.
+(`skills/shepherd/references/flock.md §@auditor` in the external shepherd repo -- not part of this
+plugin's `skills/` tree -- the precedent this ports). A finding with no falsification condition is
+not a finding. It is an opinion, and it does not belong in an `audit_findings` row.
 
 ## Jurisdiction-honesty: the non-negotiable discipline
 

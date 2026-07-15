@@ -1,6 +1,6 @@
 {
   "kind": "toolkit",
-  "subject": "A response returned by an myfi-toolkit CLI subcommand or MCP tool call — the raw text/JSON an agent receives back after invoking a toolkit capability (e.g. describe_toolkit, stats, quote).",
+  "subject": "A response returned by an myfi-toolkit CLI subcommand or MCP tool call -- the raw text/JSON an agent receives back after invoking a toolkit capability (e.g. describe_toolkit, stats, quote).",
   "scale": 5,
   "threshold": 65,
   "dimensions": [

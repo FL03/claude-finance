@@ -1,4 +1,4 @@
-"""Gate: the deterministic verdict — weighted overall, threshold pass/fail,
+"""Gate: the deterministic verdict -- weighted overall, threshold pass/fail,
 validation errors, and judge-response JSON extraction. The math is code, no
 LLM: every case here calls ``compute_verdict``/``extract_json`` directly, no
 subprocess, no mock seam needed. stdlib unittest, <2s.
@@ -94,7 +94,7 @@ class ComputeVerdictTests(unittest.TestCase):
             myfi_eval.compute_verdict(ADVISORY_RUBRIC, scores, threshold=None, model="opus", kind="advisory")
 
     def test_bool_score_is_rejected_as_non_numeric(self) -> None:
-        # bool is a subclass of int in Python — must NOT silently pass as a score.
+        # bool is a subclass of int in Python -- must NOT silently pass as a score.
         scores = {"actionable-recs": True, "data-grounded": 4, "risk-disclosed": 4, "client-clarity": 4}
         with self.assertRaises(myfi_eval.JudgeError):
             myfi_eval.compute_verdict(ADVISORY_RUBRIC, scores, threshold=None, model="opus", kind="advisory")

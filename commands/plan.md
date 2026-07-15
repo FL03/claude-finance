@@ -22,14 +22,19 @@ artifact.
   `@advisor`'s decomposition so every dispatched unit is scoped to the same timeline.
 - `--out=<path>` (default `.myfi/reports/plan-<slug>-<timestamp>.md`) -- where the final plan
   artifact lands, same slug/timestamp convention as `/myfi:analyze`.
-- `--redo-cap=3` (default `3`) -- the `@auditor` REDO ceiling for this run. Never raise this past
-  the flock-wide cap without an explicit operator override; a run that exhausts the cap halts
+- `--redo-cap=3` (default `3`, hard ceiling `3`) -- the `@auditor` REDO count for this run. The
+  flock-wide REDO cap is a hard ceiling, not a tunable policy default (`agents/auditor.md §Modes`,
+  `skills/myfi/references/loop-templates.md §The flock-wide REDO cap`): a value above `3` clamps
+  down to `3` -- there is no operator override past the hard cap. A run that exhausts the cap halts
   rather than shipping an unaudited plan.
 
 ## Step 0 -- Preflight
 
-Parse `<goal>` and flags. Read `skills/myfi/SKILL.md` first -- orient to the toolkit, the flock
-table, the command list, and the LLM-routing law before dispatching anything. `db init` via
+Parse `<goal>` and flags. Resolve `--redo-cap` against the flock-wide hard ceiling of `3`
+(`agents/auditor.md §Modes`, `skills/myfi/references/loop-templates.md §The flock-wide REDO cap`):
+any value above `3` clamps down to `3`, never higher -- there is no operator override past the hard
+cap. Read `skills/myfi/SKILL.md` first -- orient to the toolkit, the flock table, the command list,
+and the LLM-routing law before dispatching anything. `db init` via
 `mcp__plugin_myfi_myfi-toolkit__db_init` if `.myfi/myfi.db` does not yet exist, so the pipeline has
 a per-project registry to persist dispatch state and audit findings into.
 
@@ -52,15 +57,17 @@ returns a bounded task result. This command does not dispatch these agents direc
 
 Every specialist's output, and `@advisor`'s own draft synthesis, goes through `@auditor` before
 anything is finalized. `@auditor` returns a Hypothesis+Falsification+Confidence triple per finding
-and a PASS/REDO verdict. On REDO, this command re-dispatches the SAME specialist with the
-auditor's findings attached (never patches the output itself) and loops back to Step 2/3, capped
-at `--redo-cap` cycles. Exhausting the cap without a PASS halts the pipeline -- a plan that never
-clears the adversarial gate does not ship.
+and a PASS/REDO verdict. On REDO, `@advisor` re-dispatches the SAME specialist with the auditor's
+findings attached (never patches the output itself, per `agents/advisor.md §The dispatch cycle`
+step 3) -- `@advisor` is the flock's sole dispatcher; this command never dispatches a specialist
+directly. This command loops back to observe Step 2/3 again, capped at `--redo-cap` cycles.
+Exhausting the cap without a PASS halts the pipeline -- a plan that never clears the adversarial
+gate does not ship.
 
 ## Step 4 -- @designer finalizes the artifact
 
-Once `@auditor` returns PASS on every unit, hand the audited content to `@designer` for the final
-live-artifact pass: chart rendering placement, HTML/data-format finalization
+Once `@auditor` returns PASS on every unit, `@advisor` hands the audited content to `@designer` for
+the final live-artifact pass: chart rendering placement, HTML/data-format finalization
 (`agents/designer.md`). `@designer` owns the last edit on the artifact; this command does not
 re-word its output.
 
@@ -94,7 +101,9 @@ The last line of output is always the resolved plan artifact path:
 Every figure in the assembled plan traces to a toolkit call or a specialist's cited output -- never
 an invented number (`agents/advisor.md §Grounding rule`). Every model call any dispatched agent
 makes routes through `services/llm` to local Claude Code, never a hosted inference API
-(`skills/myfi/SKILL.md §The LLM law`).
+(`skills/myfi/SKILL.md §The LLM law`). Each agent the pipeline dispatches runs on the model the
+flock roster pins -- `@advisor` on opus, every specialist on sonnet
+(`skills/myfi/SKILL.md §Dispatch by the roster`); the pipeline never lifts a seat to opus for a run.
 
 ## Eval
 

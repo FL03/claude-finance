@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# W2-myfi-skill structural gate — the MYFI core scaffold orients a cold subagent.
+# W2-myfi-skill structural gate -- the MYFI core scaffold orients a cold subagent.
 # Wraps the unit [ACCEPTANCE] predicate: frontmatter name==myfi, references the
 # toolkit CLI + services/llm law + all six flock agents + the MCP tool surface.
 # Deterministic, python/rg only, <1s.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# bin/myfi-toolkit — thin wrapper for the myfi_toolkit CLI console script.
+# bin/myfi-toolkit -- thin wrapper for the myfi_toolkit CLI console script.
 #
 # Prefers `poetry run` inside services/toolkit/ (dev + CI use this path
 # directly); falls back to `python3 -m myfi_toolkit.cli` on PYTHONPATH if

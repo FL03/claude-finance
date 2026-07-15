@@ -26,11 +26,11 @@ and `@designer` performs the final artifact pass once the gate clears.
 ## Install
 
 ```text
-/plugin marketplace add FL03/myfi
+/plugin marketplace add FL03/claude-finance
 /plugin install myfi@fl03
 ```
 
-Runtime needs: `git`, `bash`, Python 3.14+, and `poetry` for the toolkit venv. No API key required.
+Runtime needs: `git`, `bash`, Python 3.12+, and `poetry` for the toolkit venv. No API key required.
 
 ## Quickstart
 

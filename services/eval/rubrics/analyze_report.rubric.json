@@ -1,11 +1,11 @@
 {
   "kind": "analyze_report",
-  "subject": "The report artifact produced by /myfi:analyze — a single-shot toolkit pull plus one flock agent pass, written to a report path the command prints. Not the full /myfi:plan pipeline output.",
+  "subject": "The report artifact produced by /myfi:analyze -- a single-shot toolkit pull plus one flock agent pass, written to a report path the command prints. Not the full /myfi:plan pipeline output.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
-    { "key": "report-completeness", "weight": 2, "desc": "Covers a real answer to the subject: current position, a recommendation, and a next step — not a partial fragment or a request for more information in place of an answer." },
-    { "key": "data-grounding",      "weight": 2, "desc": "Every figure traces to a toolkit call (quote/db) or a named, checkable input from Step 1 — no hallucinated numbers." },
+    { "key": "report-completeness", "weight": 2, "desc": "Covers a real answer to the subject: current position, a recommendation, and a next step -- not a partial fragment or a request for more information in place of an answer." },
+    { "key": "data-grounding",      "weight": 2, "desc": "Every figure traces to a toolkit call (quote/db) or a named, checkable input from Step 1 -- no hallucinated numbers." },
     { "key": "actionable-recs",     "weight": 1, "desc": "The recommendation is concrete enough to act on this week, not a vague platitude or a punt back to 'consult a professional' with no substance." }
   ],
   "guidance": "Reward a report that answers the subject directly with real, toolkit-grounded figures and a concrete next step, in the shape a caller could open and act on immediately. Penalize a report that hedges into a non-answer, invents a number with no traceable source, or stops short of the recommendation the subject actually asked for."

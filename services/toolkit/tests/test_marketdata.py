@@ -1,4 +1,4 @@
-"""Gate tests for myfi_toolkit.marketdata — deterministic, offline, <2s.
+"""Gate tests for myfi_toolkit.marketdata -- deterministic, offline, <2s.
 
 Exercises the v0.0.0 plan's `W3-toolkit-marketdata` [ACCEPTANCE]: with NO
 provider env set, the default source returns a typed `Quote` with
@@ -47,7 +47,7 @@ _BAD_SCORES = {
 
 @pytest.fixture(autouse=True)
 def _no_provider_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Every test in this module starts from "no provider env set" — the
+    """Every test in this module starts from "no provider env set" -- the
     exact precondition the [ACCEPTANCE] predicate names.
     """
     monkeypatch.delenv(PROVIDER_ENV, raising=False)
@@ -73,7 +73,7 @@ def test_quote_is_the_declared_dataclass_shape() -> None:
     assert isinstance(q.price, float)
     assert isinstance(q.currency, str) and isinstance(q.source, str)
 
-    # frozen — a Quote is immutable once returned.
+    # frozen -- a Quote is immutable once returned.
     with pytest.raises(dataclasses.FrozenInstanceError):
         q.price = 1.0  # type: ignore[misc]
 
@@ -109,7 +109,7 @@ def test_quote_requires_a_non_empty_symbol() -> None:
 
 def test_cli_handler_prints_json_with_symbol_and_source(capsys: pytest.CaptureFixture[str]) -> None:
     # Exercises the same call myfi_toolkit.cli._cmd_quote makes
-    # (`marketdata.quote(args.symbol)`) — the [ACCEPTANCE] predicate's
+    # (`marketdata.quote(args.symbol)`) -- the [ACCEPTANCE] predicate's
     # "emits JSON with symbol=='AAPL' and source=='research'" bar.
     exit_code = quote("AAPL")
     out = capsys.readouterr().out.strip()

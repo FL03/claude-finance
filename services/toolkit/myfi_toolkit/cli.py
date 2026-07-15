@@ -1,4 +1,4 @@
-"""myfi_toolkit.cli — stdlib argparse dispatcher for the myfi toolkit.
+"""myfi_toolkit.cli -- stdlib argparse dispatcher for the myfi toolkit.
 
 Stays import-light on purpose: this module is on the hot path of the plugin's
 fast gate (`bin/myfi-toolkit --version`, CLI import/smoke tests), so the heavy
@@ -25,7 +25,7 @@ def _cmd_version(_args: argparse.Namespace) -> int:
 
 
 def _cmd_db(args: argparse.Namespace) -> int:
-    # Lazy — the myctx subpackage (schema, migrations, connection factory)
+    # Lazy -- the myctx subpackage (schema, migrations, connection factory)
     # lands in Wave 3; the scaffold never imports it at module scope so this
     # unit builds and tests green without it.
     from myfi_toolkit import myctx
@@ -34,14 +34,14 @@ def _cmd_db(args: argparse.Namespace) -> int:
 
 
 def _cmd_quote(args: argparse.Namespace) -> int:
-    # Lazy — the marketdata adapter package lands in Wave 3.
+    # Lazy -- the marketdata adapter package lands in Wave 3.
     from myfi_toolkit import marketdata
 
     return marketdata.quote(args.symbol)
 
 
 def _cmd_stats(_args: argparse.Namespace) -> int:
-    # Lazy — pulls in numpy/pandas/scipy only when this subcommand runs.
+    # Lazy -- pulls in numpy/pandas/scipy only when this subcommand runs.
     from myfi_toolkit.tools import describe_stats
 
     print(describe_stats())
@@ -51,7 +51,7 @@ def _cmd_stats(_args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="myfi-toolkit",
-        description="myfi finance-plugin toolkit — CLI over the myfi_toolkit core lib.",
+        description="myfi finance-plugin toolkit -- CLI over the myfi_toolkit core lib.",
     )
     # Top-level `--version`/`-V` short-circuits before subcommand dispatch
     # (argparse's built-in version action prints + exits 0), matching the

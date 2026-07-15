@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""services/eval/eval.py — the myfi eval harness.
+"""services/eval/eval.py -- the myfi eval harness.
 
 Scores a LATENT agent output (an advisor recommendation, a plan, a trade
 thesis, a skill's own orientation, …) against a rubric, using the
 local-Claude-Code judge in ``services/llm`` (see ``services/llm/llm.py``).
 This is the behavioral eval half of CLAUDE.md's "tests + evals, same commit"
-rule — the plugin's latent instructions get a real judge, not just
+rule -- the plugin's latent instructions get a real judge, not just
 gate-tested storage.
 
 The latent/deterministic split this plugin teaches, applied to itself:
@@ -16,7 +16,7 @@ The latent/deterministic split this plugin teaches, applied to itself:
                                  exit code. Same scores in => same verdict out.
 
 Pure + stateless: reads a rubric + an input, returns a verdict. It does not
-touch a DB — that is myctx's job (Wave 3) via a caller that resolves subjects
+touch a DB -- that is myctx's job (Wave 3) via a caller that resolves subjects
 and records verdicts. This stays a clean function so it is trivially testable
 with a mocked judge (``MYFI_LLM_MOCK``).
 
@@ -40,7 +40,7 @@ becomes plain ``json`` + arithmetic, with no external dependency.
   MYFI_EVAL_LLM    override path to the llm.py this shells to (default:
                    services/llm/llm.py next to this file's parent).
   MYFI_EVAL_LIVE   when "1", strips MYFI_LLM_MOCK / MYFI_LLM_MOCK_TEXT before
-                   shelling to llm.py — a stray mock from a parent shell must
+                   shelling to llm.py -- a stray mock from a parent shell must
                    not make the live judge lane a lie.
 """
 
@@ -81,6 +81,50 @@ def _die(message: str, code: int) -> int:
 # ── rubric access ──────────────────────────────────────────────────────────
 
 
+def validate_rubric(rubric: dict, kind: str) -> None:
+    """Validate rubric structure so a malformed rubric fails as a documented
+    JudgeError (-> exit 4), not an uncaught KeyError/ZeroDivisionError escaping
+    to a raw traceback (exit 1).
+
+    Checks: "scale" is a positive number; "dimensions" is a non-empty list;
+    every dimension is an object with a "key", a numeric "weight", and a
+    "desc"; and the dimension weights do not sum to zero (which would make
+    compute_verdict's overall a division by zero).
+    """
+    scale = rubric.get("scale")
+    if isinstance(scale, bool) or not isinstance(scale, (int, float)) or scale <= 0:
+        raise JudgeError(f"rubric '{kind}' has missing or invalid 'scale' (must be a positive number)")
+
+    dims = rubric.get("dimensions")
+    if not isinstance(dims, list) or not dims:
+        raise JudgeError(f"rubric '{kind}' has no dimensions (missing or empty 'dimensions' list)")
+
+    seen_keys: set[str] = set()
+    for i, dim in enumerate(dims):
+        label = f"dimension #{i}"
+        if not isinstance(dim, dict):
+            raise JudgeError(f"rubric '{kind}' {label} is not an object")
+        if "key" not in dim or not isinstance(dim["key"], str) or not dim["key"]:
+            raise JudgeError(f"rubric '{kind}' {label} is missing a non-empty 'key'")
+        label = f"dimension '{dim['key']}'"
+        if dim["key"] in seen_keys:
+            raise JudgeError(f"rubric '{kind}' has duplicate dimension key '{dim['key']}'")
+        seen_keys.add(dim["key"])
+        if "weight" not in dim:
+            raise JudgeError(f"rubric '{kind}' {label} is missing required 'weight'")
+        weight = dim["weight"]
+        if isinstance(weight, bool) or not isinstance(weight, (int, float)):
+            raise JudgeError(f"rubric '{kind}' {label} has a non-numeric 'weight'")
+        if weight < 0:
+            raise JudgeError(f"rubric '{kind}' {label} has a negative 'weight'")
+        if "desc" not in dim or not isinstance(dim["desc"], str) or not dim["desc"]:
+            raise JudgeError(f"rubric '{kind}' {label} is missing a non-empty 'desc'")
+
+    total_weight = sum(dim["weight"] for dim in dims)
+    if total_weight == 0:
+        raise JudgeError(f"rubric '{kind}' dimension weights sum to 0 (need at least one weight > 0)")
+
+
 def load_rubric(kind: str, rubric_dir: Path | None = None) -> dict:
     rubric_dir = rubric_dir or RUBRIC_DIR
     path = rubric_dir / f"{kind}.rubric.json"
@@ -88,9 +132,11 @@ def load_rubric(kind: str, rubric_dir: Path | None = None) -> dict:
         raise UsageError(f"no rubric for kind '{kind}' (try: {PROG} rubrics)")
     try:
         with open(path, encoding="utf-8") as fh:
-            return json.load(fh)
+            rubric = json.load(fh)
     except json.JSONDecodeError as exc:
         raise JudgeError(f"rubric '{kind}' is not valid JSON: {exc}") from exc
+    validate_rubric(rubric, kind)
+    return rubric
 
 
 def list_rubrics(rubric_dir: Path | None = None) -> list[tuple[str, str]]:
@@ -108,7 +154,7 @@ def list_rubrics(rubric_dir: Path | None = None) -> list[tuple[str, str]]:
     return out
 
 
-# ── judge-prompt build (deterministic — reproducible from the rubric) ───────
+# ── judge-prompt build (deterministic -- reproducible from the rubric) ───────
 
 
 def build_judge_prompt(rubric: dict, item: str) -> tuple[str, str]:
@@ -123,7 +169,7 @@ def build_judge_prompt(rubric: dict, item: str) -> tuple[str, str]:
         "You are a strict, calibrated evaluation judge for the myfi plugin. "
         f"Score the SUBJECT against each rubric dimension on an integer scale of "
         f"1..{scale} (1=poor, {scale}=excellent). Use the full range and default LOW "
-        "when evidence is weak. Output ONLY a single JSON object and nothing else — "
+        "when evidence is weak. Output ONLY a single JSON object and nothing else -- "
         'no prose, no markdown fences. Shape: {"scores":{<dimension>:<int>,...},'
         '"rationale":"<=160 chars"}. '
         f"Include exactly these dimension keys: {keys}."
@@ -178,7 +224,12 @@ def compute_verdict(
 
     Rounding is round-half-up (``floor(x + 0.5)``), matching the ported bash
     harness's jq arithmetic exactly rather than Python's round-half-to-even.
+
+    Validates rubric structure first (a caller that built ``rubric`` by hand
+    rather than via ``load_rubric`` -- e.g. a test -- gets the same JudgeError
+    on a malformed shape, never a raw KeyError/ZeroDivisionError).
     """
+    validate_rubric(rubric, kind)
     scale = rubric["scale"]
     dims = rubric["dimensions"]
     if threshold is None:
@@ -201,6 +252,8 @@ def compute_verdict(
         raise JudgeError(f"dimension score out of range 1..{scale}: {', '.join(out_of_range)}")
 
     total_weight = sum(d["weight"] for d in dims)
+    if total_weight == 0:  # pragma: no cover -- validate_rubric above already rejects this
+        raise JudgeError(f"rubric '{kind}' dimension weights sum to 0 (need at least one weight > 0)")
     weighted_sum = sum(scores[d["key"]] * d["weight"] for d in dims)
     overall = math.floor(100 * weighted_sum / (scale * total_weight) + 0.5)
 
@@ -216,7 +269,7 @@ def compute_verdict(
     }
 
 
-# ── the judge call (the only model seam — shells to services/llm/llm.py) ────
+# ── the judge call (the only model seam -- shells to services/llm/llm.py) ────
 
 
 def run_judge(
@@ -299,15 +352,15 @@ def _emit(result: dict, fmt: str) -> None:
     verdict = "PASS" if result["passed"] else "FAIL"
     if fmt == "md":
         print(
-            f"**EVAL `{result['kind']}`** — score **{result['overall']}/100** "
-            f"(threshold {result['threshold']}) — {verdict} · model `{result['model']}`\n"
+            f"**EVAL `{result['kind']}`** -- score **{result['overall']}/100** "
+            f"(threshold {result['threshold']}) -- {verdict} · model `{result['model']}`\n"
         )
         for key, value in result["scores"].items():
             print(f"- {key}: {value}/{result['scale']}")
         print(f"\n_{result['rationale']}_")
     else:
         print(
-            f"EVAL {result['kind']} — score={result['overall']}/100 "
+            f"EVAL {result['kind']} -- score={result['overall']}/100 "
             f"threshold={result['threshold']} {verdict}  model={result['model']}"
         )
         scored = "  ".join(f"{k}={v}/{result['scale']}" for k, v in result["scores"].items())

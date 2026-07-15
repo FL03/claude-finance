@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# W4-agents-actors structural gate — @advisor (opus dispatcher) + @quant (research analyst).
+# W4-agents-actors structural gate -- @advisor (opus dispatcher) + @quant (research analyst).
 # Wraps the unit [ACCEPTANCE] predicate: valid frontmatter (name/description/tools) on both
 # agents, a system-prompt body >30 lines, MYFI + toolkit cited, advisor names opus and its
 # `tools:` line wires a dispatch tool. Deterministic, python3/rg only, <1s.
@@ -63,7 +63,7 @@ else
   bad "agents/advisor.md tools: has no dispatch tool: $tools_line"
 fi
 
-# quant loads the finance skill per [SPEC] — grep the body, not just a passing mention.
+# quant loads the finance skill per [SPEC] -- grep the body, not just a passing mention.
 rg -qi 'finance' agents/quant.md \
   && ok "agents/quant.md references the finance skill" \
   || bad "agents/quant.md does not reference the finance skill"
