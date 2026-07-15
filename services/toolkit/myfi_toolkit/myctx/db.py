@@ -7,7 +7,9 @@ to forget. Also carries `dispatch()`, the handler the CLI's lazy `db`
 subcommand imports (`myfi_toolkit.cli._cmd_db` -> `myctx.dispatch(args)`).
 
 Stdlib-only (sqlite3, argparse, pathlib) -- no ORM, per CLAUDE.md "vanilla by
-default".
+default". The db path itself comes from `myfi_toolkit.config` (`[toolkit].db`
+/ `[toolkit].global_db` in `.claude/myfi.toml`, hardcoded defaults otherwise)
+-- see `resolve_db_path()`.
 """
 
 from __future__ import annotations
@@ -18,9 +20,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-# Relative to the resolved root (logical cwd for per-project, $HOME for --global).
-PROJECT_DB_RELATIVE = Path(".myfi") / "myfi.db"
-GLOBAL_DB_RELATIVE = Path(".myfi") / "global.db"
+from myfi_toolkit import config
 
 
 def _logical_cwd() -> Path:
@@ -49,16 +49,29 @@ def _logical_cwd() -> Path:
 def resolve_db_path(use_global: bool = False, project_root: Path | None = None) -> Path:
     """Resolve the sqlite db path.
 
-    Per-project (default): `<project_root>/.myfi/myfi.db`, where
+    Per-project (default): `<project_root>/<[toolkit].db>`, where
     `project_root` defaults to the caller's logical working directory (see
-    `_logical_cwd`) -- the caller's project checkout.
+    `_logical_cwd`) -- the caller's project checkout -- and `[toolkit].db`
+    comes from `myfi_toolkit.config.toolkit_db()` (`.claude/myfi.toml`,
+    default `.myfi/myfi.db`). An absolute `[toolkit].db` value is used as-is,
+    ignoring `project_root`.
 
-    Global (`use_global=True`): `~/.myfi/global.db`, ignoring `project_root`.
+    Global (`use_global=True`): `[toolkit].global_db` (default
+    `~/.myfi/global.db`) via `myfi_toolkit.config.toolkit_global_db()`,
+    resolved relative to `$HOME` unless it is already absolute (or
+    `~`-prefixed, which `expanduser()` makes absolute); ignores
+    `project_root`.
     """
     if use_global:
-        return Path.home() / GLOBAL_DB_RELATIVE
+        global_path = Path(config.toolkit_global_db()).expanduser()
+        if global_path.is_absolute():
+            return global_path
+        return Path.home() / global_path
     root = project_root if project_root is not None else _logical_cwd()
-    return root / PROJECT_DB_RELATIVE
+    db_path = Path(config.toolkit_db()).expanduser()
+    if db_path.is_absolute():
+        return db_path
+    return root / db_path
 
 
 def connect(db_path: Path) -> sqlite3.Connection:

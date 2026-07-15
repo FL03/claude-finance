@@ -32,6 +32,7 @@
 
 # ----- [CLAUDE] -----
 .claude/worktrees/
+.claude/settings.local.json
 
 
 # ----- [SHEPHERD] -----

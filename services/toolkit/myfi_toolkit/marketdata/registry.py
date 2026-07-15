@@ -1,10 +1,12 @@
-"""myfi_toolkit.marketdata.registry — provider selection by env.
+"""myfi_toolkit.marketdata.registry — provider selection by config + env.
 
-``default_source()`` picks a ``MarketDataSource`` by the ``MYFI_MARKETDATA_PROVIDER``
-env var, falling back to the research-degrade default (``research.py``) when
-unset. Concrete providers are DEFERRED behind the contract per the v0.0.0
-plan's non-goals ("No concrete market-data provider integrations — the
-adapter contract only; providers wire in behind it later") and
+``default_source()`` picks a ``MarketDataSource`` by ``[marketdata].provider``
+in `.claude/myfi.toml` (via `myfi_toolkit.config`), which itself defers to the
+``MYFI_MARKETDATA_PROVIDER`` env var when it's set, falling back to the
+research-degrade default (``research.py``) when neither is configured.
+Concrete providers are DEFERRED behind the contract per the v0.0.0 plan's
+non-goals ("No concrete market-data provider integrations — the adapter
+contract only; providers wire in behind it later") and
 `discovery-marketdata.md`'s LOCKED RECOMMENDATIONS (Finnhub default, yfinance
 + FRED alternates): they are registered here so the provider-selection
 surface is real and testable now, but each stub raises ``NotImplementedError``
@@ -13,8 +15,7 @@ until a follow-up unit wires the concrete HTTP client + API key handling.
 
 from __future__ import annotations
 
-import os
-
+from myfi_toolkit import config
 from myfi_toolkit.marketdata.contract import MarketDataSource, Quote
 from myfi_toolkit.marketdata.research import ResearchSource
 
@@ -73,13 +74,18 @@ PROVIDERS: dict[str, type[MarketDataSource]] = {
 
 
 def default_source() -> MarketDataSource:
-    """Select a ``MarketDataSource`` by env, falling back to ``research``.
+    """Select a ``MarketDataSource`` by ``[marketdata].provider``, falling
+    back to ``research``.
 
-    Raises ``ValueError`` for an unrecognized ``MYFI_MARKETDATA_PROVIDER``
-    value — a typo'd provider name fails loudly here rather than silently
-    behaving like the default.
+    Resolution goes through ``myfi_toolkit.config.marketdata_provider()``:
+    ``MYFI_MARKETDATA_PROVIDER`` env wins over ``.claude/myfi.toml``'s
+    ``[marketdata].provider``, which wins over the ``research`` default.
+
+    Raises ``ValueError`` for an unrecognized provider name — a typo'd
+    provider fails loudly here rather than silently behaving like the
+    default.
     """
-    name = (os.environ.get(PROVIDER_ENV) or DEFAULT_PROVIDER).strip().lower()
+    name = config.marketdata_provider().strip().lower()
     try:
         provider_cls = PROVIDERS[name]
     except KeyError as exc:

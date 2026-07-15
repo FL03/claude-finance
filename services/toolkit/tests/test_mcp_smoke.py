@@ -84,7 +84,12 @@ def test_documented_tools_are_registered() -> None:
 
 def test_quote_tool_returns_typed_dict() -> None:
     """The quote MCP tool degrades to the research source (no provider env) and
-    returns a JSON-serializable dict carrying the symbol and its source."""
+    returns a JSON-serializable dict carrying the symbol and its source.
+
+    Locks the `to_dict()` (not `asdict()`) fix in `mcp_server.quote`: `asdict()`
+    on the `Quote` dataclass would leak a raw `datetime` for `asof`, which
+    `json.dumps` cannot serialize. `to_dict()` isoformats it instead.
+    """
     import os
 
     os.environ.pop("MYFI_MARKETDATA_PROVIDER", None)
@@ -92,6 +97,13 @@ def test_quote_tool_returns_typed_dict() -> None:
     assert isinstance(result, dict)
     assert result.get("symbol", "").upper() == "AAPL" or "value" in result
     assert "source" in result or "value" in result
+
+    serialized = json.dumps(result)
+    assert serialized
+
+    asof = result.get("asof")
+    assert isinstance(asof, str), f"asof must be an ISO string, not {type(asof)!r}"
+    assert "T" in asof, f"asof does not look like an ISO datetime string: {asof!r}"
 
 
 def test_eval_margin(monkeypatch: pytest.MonkeyPatch) -> None:

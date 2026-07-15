@@ -9,9 +9,16 @@ contract, never ``claude`` directly, so there is exactly one place that owns
 the model invocation, the timeout, the model default, and the mock seam.
 
 Standalone by design (services-first / parallel-safe): stdlib only, reads only
-its own env vars, and takes config (which model, which timeout) via flags —
-never a project config file — so a second session can work anywhere else in
-the repo without colliding here.
+its own env vars plus one optional best-effort layer -- the [llm].model key in
+.claude/myfi.toml, read through myfi_toolkit.config when that sibling package
+happens to be importable (see _default_model() below). That lookup is soft:
+if myfi_toolkit can't be imported (a bare `python3 services/llm/llm.py` with
+no sibling checkout, a stripped-down deployment, anything at all), this
+degrades straight back to the env-var-or-hardcoded-default behavior this
+service has always had -- so a second session can still work anywhere else in
+the repo without colliding here, and this service never hard-depends on
+another service's package. Timeout still comes from a flag/env only, never
+myfi.toml -- there is no [llm].timeout key.
 
 Ported from shepherd's ``services/llm/llm.sh`` ("Python over bash" lesson,
 discovery-harvest): Python's own ``subprocess.run(..., timeout=...)`` replaces
@@ -29,8 +36,10 @@ keyword argument, and is exact where the bash version was an approximation.
 
 ── Env ─────────────────────────────────────────────────────────────────────
   MYFI_LLM_BIN        claude binary (default: claude)
-  MYFI_LLM_MODEL      default model alias (default: opus — best by default,
-                       per CLAUDE.md; never silently downgrade for cost)
+  MYFI_LLM_MODEL      default model alias, wins over .claude/myfi.toml's
+                       [llm].model (default: opus — best by default, per
+                       CLAUDE.md; never silently downgrade for cost). See
+                       _default_model() -- the myfi.toml lookup is best-effort.
   MYFI_LLM_TIMEOUT    default timeout seconds (default: 120)
   MYFI_LLM_MOCK       path to a file whose contents `complete` returns
                        verbatim, short-circuiting the claude call. The seam
@@ -63,6 +72,34 @@ PROG = "llm.py"
 def _die(message: str, code: int = EXIT_RUNTIME) -> int:
     print(f"{PROG}: {message}", file=sys.stderr)
     return code
+
+
+def _default_model() -> str:
+    """Resolve the default model: MYFI_LLM_MODEL env > [llm].model in
+    .claude/myfi.toml (via myfi_toolkit.config, best-effort) > DEFAULT_MODEL.
+
+    The env check happens first and short-circuits before any import is
+    attempted -- when MYFI_LLM_MODEL is set, that's authoritative and this
+    never touches myfi_toolkit at all. Otherwise it appends the sibling
+    services/toolkit directory to sys.path and imports myfi_toolkit.config;
+    if that import (or the lookup itself) fails for any reason -- no sibling
+    checkout, no tomllib, anything -- this silently falls back to
+    DEFAULT_MODEL, exactly this service's original behavior. The
+    local-Claude-Code routing in cmd_complete() is unaffected either way.
+    """
+    env_value = os.environ.get("MYFI_LLM_MODEL")
+    if env_value:
+        return env_value
+    try:
+        here = os.path.dirname(os.path.abspath(__file__))
+        toolkit_src = os.path.normpath(os.path.join(here, "..", "toolkit"))
+        if toolkit_src not in sys.path:
+            sys.path.append(toolkit_src)
+        from myfi_toolkit import config as _myfi_config
+
+        return _myfi_config.llm_model()
+    except Exception:
+        return DEFAULT_MODEL
 
 
 def _resolve_mock() -> str | None:
@@ -161,7 +198,7 @@ def cmd_ping(_args: argparse.Namespace) -> int:
         version = probe.stdout.strip() or version
     except (OSError, subprocess.TimeoutExpired):
         pass
-    model = os.environ.get("MYFI_LLM_MODEL", DEFAULT_MODEL)
+    model = _default_model()
     print(f"{PROG}: claude reachable — {version}; default model={model}")
     return EXIT_OK
 
@@ -171,8 +208,8 @@ def build_parser() -> argparse.ArgumentParser:
         prog=PROG,
         description="Route a model call through the LOCAL Claude Code.",
         epilog=(
-            "Env: MYFI_LLM_BIN (default claude) · MYFI_LLM_MODEL (default opus) · "
-            "MYFI_LLM_TIMEOUT (default 120s)\n"
+            "Env: MYFI_LLM_BIN (default claude) · MYFI_LLM_MODEL (default opus, or "
+            "[llm].model in .claude/myfi.toml) · MYFI_LLM_TIMEOUT (default 120s)\n"
             "     MYFI_LLM_MOCK=<file> / MYFI_LLM_MOCK_TEXT=<str> — return verbatim, "
             "short-circuiting the claude call.\n"
             "Exit: 0 ok · 2 usage · 3 timeout · 4 llm/runtime error"
@@ -186,9 +223,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_complete.add_argument("--prompt", dest="prompt", default=None)
     p_complete.add_argument("--system-file", dest="system_file", default=None)
     p_complete.add_argument("--system", dest="system", default=None)
-    p_complete.add_argument(
-        "--model", dest="model", default=os.environ.get("MYFI_LLM_MODEL", DEFAULT_MODEL)
-    )
+    p_complete.add_argument("--model", dest="model", default=_default_model())
     p_complete.add_argument(
         "--timeout",
         dest="timeout",

@@ -180,7 +180,9 @@ table: [`docs/marketdata.md`](docs/marketdata.md).
 
 Create `.claude/myfi.toml` at the repo root, a template lives at
 [`examples/minimal/myfi.toml`](examples/minimal/myfi.toml). No section is required, every key has a
-working default.
+working default. It's parsed by `myfi_toolkit.config` and consulted by the toolkit, market-data
+adapter selection, and `services/llm`'s model default -- each key falls back to an env var
+(`MYFI_LLM_MODEL`, `MYFI_MARKETDATA_PROVIDER`) then a hardcoded default if unset here.
 
 ```toml
 [toolkit]
@@ -193,7 +195,7 @@ model = "claude-opus-4-8"
 provider = "research"
 ```
 
-Full schema: [`docs/configuration.md`](docs/configuration.md).
+Full schema and precedence order: [`docs/configuration.md`](docs/configuration.md).
 
 ---
 
