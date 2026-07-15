@@ -1,25 +1,24 @@
 #!/usr/bin/env bash
-# bin/myfi-test -- the myfi release-gate: runs all four test lanes.
+# bin/myfi-test -- the myfi release-gate: runs all five test lanes.
 #
 # W7-integration-close [SPEC]/[NOTES]: "Add bin/myfi-test (runs toolkit pytest
 # + services unittest + hooks run.sh + integration)... the single command the
-# release-gate calls." Wires exactly the four lanes the v0.0.0 plan's shared
-# naming section (§Shared naming) locks:
+# release-gate calls." Wires the four lanes the v0.0.0 plan's shared naming
+# section (§Shared naming) locks, plus a fifth structural lane:
 #   1. toolkit    -- `poetry -C services/toolkit run pytest -q`
 #   2. services   -- `python3 -m unittest discover` over services/llm + services/eval
 #   3. hooks      -- `bash hooks/tests/run.sh`
-#   4. integration -- `bash tests/integration/run.sh` (this unit)
+#   4. integration -- `bash tests/integration/run.sh`
+#   5. structure  -- `bash tests/structure/run.sh` (repo-shape gate: frontmatter,
+#                    component layout, .mcp.json wiring, doc/skill/command invariants)
 #
 # Each lane keeps its own gate discipline (deterministic, mock seam, no
 # network, no live LLM call) -- this script adds no logic beyond running the
 # four and aggregating pass/fail, so it stays a thin release-gate dispatcher,
 # not a fifth place any of those lanes' behavior could drift.
 #
-# NOTE (flagged, not silently changed -- plan [NOTES]): `.claude/shepherd.toml`
-# [gates].check currently wires only the toolkit pytest lane. Extending it to
-# call this script instead, so root's between-wave gate covers all four
-# lanes, is a `.claude/shepherd.toml` edit outside this unit's [FILES] scope
-# -- left as a named follow-up for whoever owns that file next.
+# `.claude/shepherd.toml` [gates].check now wires `bash bin/myfi-test`, so
+# root's between-wave gate runs all five lanes below, not just toolkit pytest.
 set -uo pipefail
 
 if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
@@ -76,6 +75,11 @@ run_lane "hooks (hooks/tests/run.sh)" bash "$ROOT/hooks/tests/run.sh"
 # Lane 4 -- top-level integration suite (this unit): plugin-load + the
 # /myfi:analyze mock-seam e2e + the toolkit db+quote smoke.
 run_lane "integration (tests/integration/run.sh)" bash "$ROOT/tests/integration/run.sh"
+
+# Lane 5 -- structural gate: repo shape (agent/skill/command frontmatter,
+# component layout, .mcp.json wiring, doc/skill/command invariants). Every
+# tests/structure/test_*.sh, aggregated. git/jq/python3 only, deterministic.
+run_lane "structure (tests/structure/run.sh)" bash "$ROOT/tests/structure/run.sh"
 
 echo "============================================================"
 echo "$((total - fail))/$total suites passed"
