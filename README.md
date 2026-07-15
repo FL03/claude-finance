@@ -238,7 +238,7 @@ Full schema and precedence order: [`docs/configuration.md`](docs/configuration.m
 
 ## Versioning
 
-Semantic versioning. Current version: **0.0.3**. The first complete, installable release was
+Semantic versioning. Current version: **0.0.4**. The first complete, installable release was
 **0.0.0** (the foundation); 0.0.1 renamed the repository and 0.0.2 is a version bump. See
 [`CHANGELOG.md`](CHANGELOG.md).
 
