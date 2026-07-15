@@ -8,9 +8,9 @@ description: The myfi self-improvement loop (harvest, store, inject, cite). Turn
 The flock must not relearn the same failure twice. This skill is the myfi analogue of shepherd's
 adaptation loop: four verbs, in order, closing a durable feedback cycle through the per-project
 myctx SQLite database (`.myfi/myfi.db`, gap-fill migrated from
-`myfi_toolkit/myctx/schema/*.sql`; see `skills/myfi/SKILL.md` for the toolkit surface). Read this
-before assembling a dispatch brief, before closing a sprint, or any time an `@auditor` REDO feels
-familiar.
+`services/toolkit/myfi_toolkit/myctx/schema/*.sql`; see `skills/myfi/SKILL.md` for the toolkit
+surface). Read this before assembling a dispatch brief, before closing a sprint, or any time an
+`@auditor` REDO feels familiar.
 
 ## The four verbs
 
@@ -49,22 +49,27 @@ step is being skipped, not that the flock stopped making mistakes.
 ## REDO discipline
 
 `@auditor` verdicts are PASS or REDO, capped at 3 attempts per unit (`skills/shepherd/references/
-flock.md §@auditor` for the shepherd precedent this ports). A REDO on the *same* concern across two
-or more units, or across sprints, is exactly the "recurring, not one-off" test the harvest step
-applies: it graduates from a one-time finding to a stored prior so the next dispatch brief for
-that surface area gets the warning up front, before the mistake repeats a third time. The cap-3
-ceiling and the harvest-on-recurrence rule work together. REDO stops runaway rework within a unit;
-IMPROVE stops the same rework from recurring across units.
+flock.md §@auditor` in the shepherd repo, the precedent this ports). A REDO on the *same* concern
+across two or more units, or across sprints, is exactly the "recurring, not one-off" test the
+harvest step applies: it graduates from a one-time finding to a stored prior so the next dispatch
+brief for that surface area gets the warning up front, before the mistake repeats a third time.
+The cap-3 ceiling and the harvest-on-recurrence rule work together. REDO stops runaway rework
+within a unit; IMPROVE stops the same rework from recurring across units.
 
 ## Where the mechanism lives
 
-The schema (`mem_entries`, `discovery_findings`, `audit_findings`, `v_mem_recent_7d`) ships in
-Wave 3's `myfi_toolkit/myctx/schema/0001_init.sql` and is reachable today via
-`myfi_toolkit.myctx.db.connect()` / `resolve_db_path()`. The harness's dispatch-time hooks
-(`hooks/scripts/adaptation_capture.sh`, wired in `hooks/hooks.json`) are the mechanized writer that
-turns a fresh `audit_findings`/`discovery_findings` row into a harvested `mem_entries(kind='prior')`
-row without a human doing it by hand. That wiring is a harness concern, not this skill's; this
-skill is the loop's contract, not its cron job.
+The schema (`mem_entries`, `discovery_findings`, `audit_findings`) ships in Wave 3's
+`services/toolkit/myfi_toolkit/myctx/schema/0001_init.sql` and is reachable today via
+`myfi_toolkit.myctx.db.connect()` / `resolve_db_path()`. `v_mem_recent_7d` itself is keyed on
+`updated_at`, not `created_at` (fixed in
+`services/toolkit/myfi_toolkit/myctx/schema/migrations/0002_v_mem_recent_7d_updated_at.sql`):
+"touched in the last 7 days" means the row's `updated_at`, so a prior whose `updated_at` gets
+refreshed on recurrence -- per the Store step above -- surfaces again no matter how old its
+`created_at` is. The harness's dispatch-time hooks (`hooks/scripts/adaptation_capture.sh`, wired in
+`hooks/hooks.json`) are the mechanized writer that turns a fresh `audit_findings`/
+`discovery_findings` row into a harvested `mem_entries(kind='prior')` row -- on recurrence,
+refreshing only `updated_at`, never `created_at` -- without a human doing it by hand. That wiring
+is a harness concern, not this skill's; this skill is the loop's contract, not its cron job.
 
 ## Bounded, not a firehose
 

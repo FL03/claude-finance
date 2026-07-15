@@ -16,9 +16,11 @@ neither position was repurchased within 30 days. The dividend routes to **Schedu
 the $1,500 threshold when combined with interest income) sourced from **Form 1099-DIV**.
 
 **Computed.** Estimated long-term gain: $2,150 (AAPL). Estimated short-term loss: -$480 (NVDA);
-short-term losses net against short-term gains first, then against long-term. Net taxable gain
-picture: **$1,670**, well under the $3,000/year loss-carryforward threshold so no carryforward
-applies this year.
+with no short-term gain to absorb it first, the short-term loss nets against the long-term gain.
+Net taxable position: a **$1,670 net long-term capital gain**, taxable at the long-term
+capital-gains rate. The $3,000/year loss-deduction cap and the loss-carryforward rule govern net
+capital *losses*, not gains -- since the net position here is a gain, neither the cap nor the
+carryforward applies this year; there is no loss to cap or carry.
 
 **Optimization.** The NVDA short-term loss already offsets part of the AAPL gain; no further
 tax-loss harvesting is recommended this year since there is no remaining short-term gain to shelter

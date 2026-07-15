@@ -10,14 +10,14 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 
 **Note**: Every contribution should have a corresponding feature request or, for larger changes, a dedicated proposal detailing the intended changes and their rationale. This helps maintain clarity and ensures that all contributions align with the project's goals.
 
-1. **Fork the Repository**: Start by forking the myfi repository to your own GitHub account.
+1. **Fork the Repository**: Start by forking the claude-finance repository to your own GitHub account.
 2. **Clone Your Fork**: Clone your forked repository to your local machine.
 3. **Create a Branch**: Create a new branch for your feature or bug fix. Use a descriptive name for your branch.
 4. **Make Changes**: Implement your changes in the new branch. Ensure your code adheres to the project's coding standards.
 5. **Test Your Changes**: Thoroughly test your changes to ensure they work as expected
 6. **Commit Your Changes**: Commit your changes with clear and concise commit messages.
 7. **Push to Your Fork**: Push your changes to your forked repository on Git
-8. **Open a Pull Request**: Navigate to the original myfi repository and open a pull request from your forked repository. Provide a detailed description of your changes and the problem they solve.
+8. **Open a Pull Request**: Navigate to the original claude-finance repository and open a pull request from your forked repository. Provide a detailed description of your changes and the problem they solve.
 9. **Address Feedback**: Be responsive to any feedback or requests for changes from the project maintainers.
 
 ## Coding Standards

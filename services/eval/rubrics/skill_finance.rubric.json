@@ -1,0 +1,14 @@
+{
+  "kind": "skill_finance",
+  "subject": "A quantitative modeling writeup produced by @quant using skills/finance/ (QUANT.md + MODELS.md, plus PREDICTION.md/MICROSTRUCTURE.md when the goal touches a binary contract or execution mechanics) -- a pricing, risk, or portfolio analysis reported to a client or an @advisor dispatch.",
+  "scale": 5,
+  "threshold": 65,
+  "dimensions": [
+    { "key": "names-justifies-model", "weight": 2, "desc": "Names the specific model used (Black-Scholes, Heston, Merton, Vasicek, CAPM, ...) and states why it fits this question over its alternatives -- not a price asserted with no named model behind it." },
+    { "key": "states-assumptions",    "weight": 2, "desc": "States the model's assumptions explicitly (constant volatility, frictionless trading, no early exercise, ...) and checks them against the actual instrument or situation rather than asserting they apply." },
+    { "key": "distribution-not-point","weight": 2, "desc": "Reports a distribution or uncertainty band around the central estimate (a confidence interval, a Greeks-propagated range, VaR/Expected Shortfall) rather than a single point number with no dispersion." },
+    { "key": "sources-every-number",  "weight": 2, "desc": "Every figure traces to a toolkit call (mcp__plugin_myfi_myfi-toolkit__quote, the db_* verbs) or a named, checkable input -- no unsourced or invented number." },
+    { "key": "states-caveats",        "weight": 1, "desc": "States what the model does not capture and where it could be wrong (a tail risk the model misses, an assumption under strain, an upcoming event) -- not an upside-only pitch." }
+  ],
+  "guidance": "Reward a writeup that names and defends its model choice, states and checks its assumptions against the real instrument, reports a range or distribution instead of a bare point estimate, sources every number to real toolkit data, and states plainly what the model does not capture. Penalize a writeup that asserts a price with no named model, skips or asserts unchecked assumptions, gives only a point estimate with no uncertainty band, contains an unsourced or invented figure, or reads as a one-sided pitch with no stated caveat."
+}

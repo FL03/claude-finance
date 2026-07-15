@@ -81,6 +81,50 @@ def _die(message: str, code: int) -> int:
 # ── rubric access ──────────────────────────────────────────────────────────
 
 
+def validate_rubric(rubric: dict, kind: str) -> None:
+    """Validate rubric structure so a malformed rubric fails as a documented
+    JudgeError (-> exit 4), not an uncaught KeyError/ZeroDivisionError escaping
+    to a raw traceback (exit 1).
+
+    Checks: "scale" is a positive number; "dimensions" is a non-empty list;
+    every dimension is an object with a "key", a numeric "weight", and a
+    "desc"; and the dimension weights do not sum to zero (which would make
+    compute_verdict's overall a division by zero).
+    """
+    scale = rubric.get("scale")
+    if isinstance(scale, bool) or not isinstance(scale, (int, float)) or scale <= 0:
+        raise JudgeError(f"rubric '{kind}' has missing or invalid 'scale' (must be a positive number)")
+
+    dims = rubric.get("dimensions")
+    if not isinstance(dims, list) or not dims:
+        raise JudgeError(f"rubric '{kind}' has no dimensions (missing or empty 'dimensions' list)")
+
+    seen_keys: set[str] = set()
+    for i, dim in enumerate(dims):
+        label = f"dimension #{i}"
+        if not isinstance(dim, dict):
+            raise JudgeError(f"rubric '{kind}' {label} is not an object")
+        if "key" not in dim or not isinstance(dim["key"], str) or not dim["key"]:
+            raise JudgeError(f"rubric '{kind}' {label} is missing a non-empty 'key'")
+        label = f"dimension '{dim['key']}'"
+        if dim["key"] in seen_keys:
+            raise JudgeError(f"rubric '{kind}' has duplicate dimension key '{dim['key']}'")
+        seen_keys.add(dim["key"])
+        if "weight" not in dim:
+            raise JudgeError(f"rubric '{kind}' {label} is missing required 'weight'")
+        weight = dim["weight"]
+        if isinstance(weight, bool) or not isinstance(weight, (int, float)):
+            raise JudgeError(f"rubric '{kind}' {label} has a non-numeric 'weight'")
+        if weight < 0:
+            raise JudgeError(f"rubric '{kind}' {label} has a negative 'weight'")
+        if "desc" not in dim or not isinstance(dim["desc"], str) or not dim["desc"]:
+            raise JudgeError(f"rubric '{kind}' {label} is missing a non-empty 'desc'")
+
+    total_weight = sum(dim["weight"] for dim in dims)
+    if total_weight == 0:
+        raise JudgeError(f"rubric '{kind}' dimension weights sum to 0 (need at least one weight > 0)")
+
+
 def load_rubric(kind: str, rubric_dir: Path | None = None) -> dict:
     rubric_dir = rubric_dir or RUBRIC_DIR
     path = rubric_dir / f"{kind}.rubric.json"
@@ -88,9 +132,11 @@ def load_rubric(kind: str, rubric_dir: Path | None = None) -> dict:
         raise UsageError(f"no rubric for kind '{kind}' (try: {PROG} rubrics)")
     try:
         with open(path, encoding="utf-8") as fh:
-            return json.load(fh)
+            rubric = json.load(fh)
     except json.JSONDecodeError as exc:
         raise JudgeError(f"rubric '{kind}' is not valid JSON: {exc}") from exc
+    validate_rubric(rubric, kind)
+    return rubric
 
 
 def list_rubrics(rubric_dir: Path | None = None) -> list[tuple[str, str]]:
@@ -178,7 +224,12 @@ def compute_verdict(
 
     Rounding is round-half-up (``floor(x + 0.5)``), matching the ported bash
     harness's jq arithmetic exactly rather than Python's round-half-to-even.
+
+    Validates rubric structure first (a caller that built ``rubric`` by hand
+    rather than via ``load_rubric`` — e.g. a test — gets the same JudgeError
+    on a malformed shape, never a raw KeyError/ZeroDivisionError).
     """
+    validate_rubric(rubric, kind)
     scale = rubric["scale"]
     dims = rubric["dimensions"]
     if threshold is None:
@@ -201,6 +252,8 @@ def compute_verdict(
         raise JudgeError(f"dimension score out of range 1..{scale}: {', '.join(out_of_range)}")
 
     total_weight = sum(d["weight"] for d in dims)
+    if total_weight == 0:  # pragma: no cover — validate_rubric above already rejects this
+        raise JudgeError(f"rubric '{kind}' dimension weights sum to 0 (need at least one weight > 0)")
     weighted_sum = sum(scores[d["key"]] * d["weight"] for d in dims)
     overall = math.floor(100 * weighted_sum / (scale * total_weight) + 0.5)
 

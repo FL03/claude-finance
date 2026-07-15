@@ -17,3 +17,14 @@ model = "claude-opus-4-8"
 # Default degrades to the WebFetch/research path. Concrete providers (finnhub, yfinance,
 # fred, massive) wire in BEHIND the MarketDataSource contract; none is required for v0.0.0.
 provider = "research"
+
+[flock]
+# Which model each dispatched flock agent runs on. The shipped roster lives in
+# config.py (FLOCK_DEFAULT_MODELS) and each agents/<name>.md frontmatter, kept in
+# lockstep by test_config.py::test_flock_frontmatter_matches_roster: only @advisor
+# runs opus, every other seat runs sonnet. This section is the operator override --
+# uncomment to retarget without editing any agent file. `default` moves every seat
+# not pinned below; a per-agent key (advisor/quant/auditor/designer/worker/trader)
+# moves just that one.
+# default  = "sonnet"
+# designer = "opus"   # e.g. put final-artifact polish on opus

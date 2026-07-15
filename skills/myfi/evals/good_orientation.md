@@ -3,7 +3,7 @@
 After reading `skills/myfi/SKILL.md`, here is what I know before doing anything else:
 
 **Toolkit.** The toolkit lives at `services/toolkit/` (package `myfi_toolkit`) and is reachable two
-ways: the CLI `bin/myfi-toolkit <verb>` (`--version`, `quote <symbol> [--json]`, `db init`, `db
+ways: the CLI `bin/myfi-toolkit <verb>` (`--version`, `quote <symbol>`, `db init`, `db
 migrate`, `db version`), and the MCP server `bin/myfi-mcp`, registered in `.mcp.json` under the key
 `myfi-toolkit`, whose tools surface to me as `mcp__plugin_myfi_myfi-toolkit__<tool>` (e.g.
 `mcp__plugin_myfi_myfi-toolkit__quote`). Inside an agent turn I prefer the MCP tool over shelling

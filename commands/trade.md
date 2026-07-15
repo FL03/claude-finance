@@ -9,7 +9,7 @@ allowed-tools: Read, Grep, Glob, Bash, Skill, Agent, Write, mcp__plugin_myfi_myf
 
 > This is a SCAFFOLD command. It documents the shape of an agentic trade cycle and the
 > authorization doctrine that would gate any future live step. It does not, and cannot, place an
-> order, touch an exchange, or confirm a fill in v0.0.0 -- no live-order path is wired anywhere in
+> order, touch an exchange, or confirm a fill in this release -- no live-order path is wired anywhere in
 > this command, its `allowed-tools` list, or the `@trader` agent it dispatches. This is the
 > command-tier twin of `agents/trader.md`'s no-exec boundary; both halt at the same gate.
 
@@ -33,7 +33,7 @@ allowed-tools: Read, Grep, Glob, Bash, Skill, Agent, Write, mcp__plugin_myfi_myf
 
 ## Authorization-gate doctrine
 
-- **The gate is permanently closed in v0.0.0.** No live-order, exchange, or execution tool is
+- **The gate is permanently closed in this release.** No live-order, exchange, or execution tool is
   wired into this command's `allowed-tools:` line (it names only read/research tools: `Read`,
   `Grep`, `Glob`, `Bash`, `Skill`, `Agent`, `Write`, and the toolkit's read-only `quote`) or into
   `@trader`'s tool list. There is nothing for the gate to open onto.
@@ -45,7 +45,7 @@ allowed-tools: Read, Grep, Glob, Bash, Skill, Agent, Write, mcp__plugin_myfi_myf
 - **Passing every gate-check is never authorization to execute.** Even a thesis that clears every
   documented check still stops at step 5; step 6's report is the terminal output.
 - **A request for a trade to be PLACED is a misuse of this command.** The correct response states
-  plainly that v0.0.0 has no execution surface -- it does not simulate one or narrate a fill.
+  plainly that this release has no execution surface -- it does not simulate one or narrate a fill.
 
 ## Step 0 -- Load skills
 
@@ -75,5 +75,5 @@ The deliverable is always a report -- never an order confirmation, a fill, or a 
 - Data cited: <toolkit quote or research source>
 - Risk / invalidation: <what breaks this thesis>
 - Gate-check log: <pass/fail per documented gate, informational only>
-- Authorization gate: HALTED -- no live-order tool wired in v0.0.0
+- Authorization gate: HALTED -- no live-order tool wired in this release
 ```

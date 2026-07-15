@@ -17,8 +17,8 @@ __all__ = ["describe_toolkit", "describe_stats"]
 # the CLI's own subparser help strings describe the identical surface.
 CAPABILITIES: tuple[str, ...] = (
     "version — print the toolkit's semantic version",
-    "db init|migrate|version [--global] — per-project/global SQLite registry (myctx, Wave 3)",
-    "quote <symbol> — fetch a market quote via the market-data adapter (Wave 3)",
+    "db init|migrate|version [--global] — per-project/global SQLite registry (myctx)",
+    "quote <symbol> — fetch a market quote via the market-data adapter",
     "stats — numpy/pandas/scipy version summary of the active toolkit environment",
 )
 
