@@ -6,12 +6,35 @@ service layer, and a stdio MCP server. Works across CLI, web, and IDE surfaces.
 
 ## From the marketplace (recommended)
 
+myfi is published through the `fl03` marketplace, hosted in the dedicated catalog repo
+[`FL03/claude`](https://github.com/FL03/claude). That repo is the marketplace (a plain
+`marketplace.json` catalog listing every `fl03` plugin); this repo, `FL03/claude-finance`, is the
+plugin it points at, installed under the name `myfi`. Add the catalog once, then install any plugin
+from it.
+
 ```text
-/plugin marketplace add FL03/claude-finance
+/plugin marketplace add FL03/claude
 /plugin install myfi@fl03
 ```
 
 Update later with `/plugin update myfi@fl03`.
+
+### Standalone (this repo as its own catalog)
+
+This repo also ships a small catalog so it can be added on its own, without the dedicated `fl03`
+one. Its marketplace name is **`claude-finance`** (the repo name), install name is **`myfi`**:
+
+```text
+/plugin marketplace add FL03/claude-finance
+/plugin install myfi@claude-finance
+```
+
+The marketplace name here is `claude-finance`, **not** `fl03`. That is deliberate: Claude Code
+keeps only one marketplace per name, so a second catalog also named `fl03` would silently replace
+the dedicated `FL03/claude` one (and with it every other plugin that catalog lists, like
+`shepherd`). Keeping the names distinct lets both coexist. Prefer the `FL03/claude` catalog above
+when you can -- it lists every `fl03` plugin in one place; reach for the standalone path only when
+you want myfi alone.
 
 ## Personal symlink or per-project pin
 

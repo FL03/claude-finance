@@ -89,8 +89,13 @@ advisor-led pipeline with the compliance gate, `/myfi:taxes` for the tax-year wo
 
 ### From the marketplace (recommended)
 
+myfi is published through the `fl03` marketplace, hosted in the dedicated catalog repo
+[`FL03/claude`](https://github.com/FL03/claude). That repo is the marketplace; this repo
+(`FL03/claude-finance`) is the plugin it points at, installed as `myfi`. Add the catalog once,
+then install (or update) any plugin under the `fl03` namespace from it.
+
 ```text
-/plugin marketplace add FL03/claude-finance
+/plugin marketplace add FL03/claude
 /plugin install myfi@fl03
 ```
 
