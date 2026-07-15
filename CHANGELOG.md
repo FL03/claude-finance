@@ -46,6 +46,19 @@ contradictions across the flock.
 
 ### Fixed
 
+- Marketplace name collision made the plugin unreachable via the dedicated catalog. This repo's
+  `.claude-plugin/marketplace.json` shipped its catalog under the name `fl03` -- the same name as
+  the dedicated multi-plugin catalog at `FL03/claude` (which lists `myfi` and `shepherd`). Claude
+  Code registers only one marketplace per name, so `/plugin marketplace add FL03/claude-finance`
+  (the old README/`docs/install.md` instruction) silently replaced the `FL03/claude` catalog,
+  dropping its other plugins and leaving `myfi@fl03` resolving from the single-plugin self-clone.
+  Renamed this repo's embedded catalog to `claude-finance` so it can never overwrite the dedicated
+  `fl03` one; repointed the recommended install at `/plugin marketplace add FL03/claude` +
+  `/plugin install myfi@fl03`, and documented the standalone `myfi@claude-finance` path for adding
+  this repo on its own. New gate `tests/structure/test_plugin_packaging.sh` fails if the embedded
+  catalog ever reclaims the `fl03` name or a doc reships the `add FL03/claude-finance` +
+  `myfi@fl03` pairing. The plugin manifest itself was never at fault (`name: myfi` is valid); the
+  defect was entirely at the marketplace-catalog layer.
 - IMPROVE-loop recurrence bug: `v_mem_recent_7d` now filters and orders by `updated_at`, not
   `created_at`, so a recurring prior older than 7 days re-surfaces instead of silently dropping out
   of the inject window (migration `0002`).
