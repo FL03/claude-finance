@@ -1,12 +1,12 @@
 {
   "kind": "audit_finding",
-  "subject": "An @auditor finding (or a full audit report) produced against an actor's draft — a compliance/local-law/data-integrity adversarial pass carrying the Hypothesis+Falsification+Confidence triple.",
+  "subject": "An @auditor finding (or a full audit report) produced against an actor's draft -- a compliance/local-law/data-integrity adversarial pass carrying the Hypothesis+Falsification+Confidence triple.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
-    { "key": "hypothesis-clarity", "weight": 2, "desc": "States a single, specific predicted failure mode in one sentence — not a vague worry ('this might be wrong somewhere')." },
-    { "key": "falsification-concreteness", "weight": 2, "desc": "Names the exact check run (a grep, a re-quote, a recomputation, a compliance-skill cross-reference) plus its literal result — not 'I checked and it seemed fine'." },
-    { "key": "calibrated-confidence", "weight": 2, "desc": "Confidence (HIGH/MEDIUM/LOW) matches the strength of the evidence given — HIGH only for a structurally-verifiable disagreement, LOW pushed to open questions rather than dressed up as a finding." },
+    { "key": "hypothesis-clarity", "weight": 2, "desc": "States a single, specific predicted failure mode in one sentence -- not a vague worry ('this might be wrong somewhere')." },
+    { "key": "falsification-concreteness", "weight": 2, "desc": "Names the exact check run (a grep, a re-quote, a recomputation, a compliance-skill cross-reference) plus its literal result -- not 'I checked and it seemed fine'." },
+    { "key": "calibrated-confidence", "weight": 2, "desc": "Confidence (HIGH/MEDIUM/LOW) matches the strength of the evidence given -- HIGH only for a structurally-verifiable disagreement, LOW pushed to open questions rather than dressed up as a finding." },
     { "key": "compliance-coverage", "weight": 1, "desc": "When the concern is compliance/local-law, the finding grounds any jurisdiction or regulation claim in a named source rather than asserting law from memory." }
   ],
   "guidance": "Reward a finding a third party could independently re-run and get the same falsification result from, with confidence honestly calibrated to the evidence and any legal/jurisdictional claim explicitly sourced. Penalize a vague hypothesis with no concrete check, an unfalsifiable claim dressed up with a HIGH confidence label, and any compliance assertion presented as fact with no grounding."

@@ -1,4 +1,4 @@
-# Naming conventions — per-project namespace
+# Naming conventions -- per-project namespace
 
 `shctx lint` enforces file-naming and directory-layout patterns under the
 per-project namespace. Overrides live in `[context.naming]` of
@@ -12,7 +12,7 @@ already exists in the repo root wins (preferring `.shepherd/` if both exist).
 
 **Conflict guard:** `shctx init` MUST refuse to create a new namespace
 directory when the *other* namespace is already an initialized shctx
-workspace (detected by its `.gitignore` marker) — this prevents split-brain
+workspace (detected by its `.gitignore` marker) -- this prevents split-brain
 where data lands in one namespace while `shepherd.toml [paths]` points at the
 other. If both coexist, `shctx doctor` surfaces a `WARN` check.
 
@@ -23,15 +23,15 @@ supported and auto-detected. Resolver order (`resolve_workdir`):
 `shepherd.db` first, falls back to `root.db` if it exists; new projects
 default to `shepherd.db`. `shctx migrate --layout v2` moves `plans/*` →
 `docs/plans/`, `reports/*` → `docs/reports/`, renames `root.db*` →
-`shepherd.db*` — idempotent, never clobbers existing destination files.
+`shepherd.db*` -- idempotent, never clobbers existing destination files.
 
 ## Layout (new-project scaffold)
 
-`shepherd.db(+wal/shm/journal)`, `shepherd.lock`, `project.json` — gitignored.
+`shepherd.db(+wal/shm/journal)`, `shepherd.lock`, `project.json` -- gitignored.
 `toolkit.json`, `CONVENTIONS.md`, `archive/`, `ctx/`, `docs/{plans,reports,
 handoffs,specs,diagrams}`, `docs/journal/` (one file per day, append-mode),
-`profiles/`, `scripts/`, `styles/`, `templates/`, `types/` — tracked.
-`cache/`, `logs/`, `tmp/` — gitignored.
+`profiles/`, `scripts/`, `styles/`, `templates/`, `types/` -- tracked.
+`cache/`, `logs/`, `tmp/` -- gitignored.
 
 ## Filename patterns (`<slug>.<group>.<ext>`)
 
@@ -56,10 +56,10 @@ Legacy equivalents drop the `docs/` prefix (`plans/`, `reports/`).
 
 **Date-only for human-editable, timestamped for machine-generated.**
 Date-only: journal entries, human-readable daily logs, daily event-log files
-— one file per day, sections use `## HH:MM — <topic>`. Timestamped
+-- one file per day, sections use `## HH:MM -- <topic>`. Timestamped
 (`YYYY-MM-DDTHH-MM-SS.*`): `tmp/*.jsonl` scratch, internal cache writes,
 sub-daily log granularity. Timestamped human files fragment context across N
-files/day; date-only machine files clobber on rapid succession — the split
+files/day; date-only machine files clobber on rapid succession -- the split
 keeps both regimes coherent.
 
 ## Sprint-branch and spec naming
@@ -74,7 +74,7 @@ day. Specs: `docs/specs/YYYY-MM-DD-<topic>-{design|spec}.md`, kebab-case
 ## Profile, style, and DB filenames
 
 `profiles/<name>.toml` (basename matches the internal `name=` field).
-`styles/<lang>.md` — `<lang>` ∈ `{rust, python, typescript, go, shell, sql}`,
+`styles/<lang>.md` -- `<lang>` ∈ `{rust, python, typescript, go, shell, sql}`,
 bundled under `${CLAUDE_PLUGIN_ROOT}/skills/context/styles/`. The SQLite file
 is `shepherd.db`; legacy `root.db` is honored automatically.
 

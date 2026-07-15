@@ -39,9 +39,10 @@ contradictions across the flock.
 - Content and correctness pass across the flock: agent, command, skill, and doc prose reconciled
   against the code and against each other (dropped internal "Wave N" codenames, aligned version
   phrasing, fixed cross-references).
-- House-style cleanup: converted em-dashes to the double-hyphen `--` across source docstrings,
-  tests, READMEs, `bin/` scripts, and `CLAUDE.md` (188 across 47 files). Eval goldens, rubrics, and
-  archival `.shepherd/` docs are deliberately left untouched to avoid perturbing scored content.
+- House-style cleanup: purged em-dashes repo-wide, converting every U+2014 to the double-hyphen
+  `--` (520 across 76 files: source docstrings and comments, tests, docs, READMEs, rubrics, eval
+  goldens, `bin/` scripts, `CLAUDE.md`, and archival `.shepherd/` planning docs). Zero remain; each
+  change is character-only, verified against the full gate.
 
 ### Fixed
 

@@ -1,11 +1,11 @@
 {
   "kind": "designer_artifact",
-  "subject": "A final live artifact produced by @designer — an HTML report, a chart-set placement, or a data export — after the underlying draft has already cleared @auditor's compliance gate.",
+  "subject": "A final live artifact produced by @designer -- an HTML report, a chart-set placement, or a data export -- after the underlying draft has already cleared @auditor's compliance gate.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
     { "key": "format-fidelity", "weight": 2, "desc": "The artifact is well-formed in its declared format (valid HTML/CSV/JSON) with no placeholder text (TODO, TBD, [insert chart]) left in." },
-    { "key": "readability",     "weight": 2, "desc": "A non-expert reader can follow the artifact top to bottom without translation — short paragraphs, clear structure, no unexplained jargon." },
+    { "key": "readability",     "weight": 2, "desc": "A non-expert reader can follow the artifact top to bottom without translation -- short paragraphs, clear structure, no unexplained jargon." },
     { "key": "final-polish",    "weight": 2, "desc": "Every chart is captioned and traceable to real data, every cited number traces to a source, and nothing the auditor already cleared (a number, a risk disclosure, a compliance claim) was altered in the edit pass." }
   ],
   "guidance": "Reward a finished artifact that renders/parses cleanly, reads naturally for a non-expert client, and shows evidence of a careful final pass (captions, no orphaned numbers, no re-litigated findings). Penalize broken markup, leftover placeholder text, jargon-heavy prose a client would need translated, an uncaptioned or untraceable chart, and any sign the editor changed a number or risk disclosure that was not theirs to touch."

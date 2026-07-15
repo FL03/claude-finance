@@ -1,12 +1,12 @@
 {
   "kind": "quant_analysis",
-  "subject": "A research-grade model or analysis produced by the @quant agent — pricing, risk, portfolio, factor, or prediction-market work dispatched by @advisor.",
+  "subject": "A research-grade model or analysis produced by the @quant agent -- pricing, risk, portfolio, factor, or prediction-market work dispatched by @advisor.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
     { "key": "analytical-rigor", "weight": 2, "desc": "States assumptions and methodology explicitly (which model, why it applies) rather than asserting a result with no derivation a reader could falsify." },
     { "key": "model-soundness", "weight": 2, "desc": "The chosen model fits the question (e.g. Black-Scholes for a European option, a factor model for attribution) and its stated assumptions are internally consistent, not mismatched or self-contradicting." },
-    { "key": "cites-data",      "weight": 2, "desc": "Every figure traces to a toolkit call or a named, checkable input — no unsourced or hallucinated numbers." },
+    { "key": "cites-data",      "weight": 2, "desc": "Every figure traces to a toolkit call or a named, checkable input -- no unsourced or hallucinated numbers." },
     { "key": "decisiveness",    "weight": 1, "desc": "Commits to a central estimate with a stated uncertainty band, rather than a hedge-everything range with no view." }
   ],
   "guidance": "Reward a model whose assumptions and methodology are stated plainly enough to falsify, whose model choice fits the question, whose every number cites real toolkit data, and which commits to a decisive read with an honest confidence interval. Penalize hand-waved methodology, a model mismatched to the question, unsourced or invented figures, and a wishy-washy non-answer that never commits to an estimate."

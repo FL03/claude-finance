@@ -1,13 +1,13 @@
 {
   "kind": "skill_myfi",
-  "subject": "A fresh subagent's orientation statement produced after reading ONLY skills/myfi/SKILL.md — does it know how to reach the toolkit (CLI + MCP + per-project DB), which flock agent to dispatch and when, the four entry-point commands, and the LLM-routing law?",
+  "subject": "A fresh subagent's orientation statement produced after reading ONLY skills/myfi/SKILL.md -- does it know how to reach the toolkit (CLI + MCP + per-project DB), which flock agent to dispatch and when, the four entry-point commands, and the LLM-routing law?",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
-    { "key": "orients-to-toolkit", "weight": 2, "desc": "Correctly names bin/myfi-toolkit CLI verbs, the myfi-mcp MCP tool prefix (mcp__plugin_myfi_myfi-toolkit__*), and the per-project .myfi/myfi.db — concrete, not a vague 'there is a toolkit'." },
+    { "key": "orients-to-toolkit", "weight": 2, "desc": "Correctly names bin/myfi-toolkit CLI verbs, the myfi-mcp MCP tool prefix (mcp__plugin_myfi_myfi-toolkit__*), and the per-project .myfi/myfi.db -- concrete, not a vague 'there is a toolkit'." },
     { "key": "names-the-flock", "weight": 2, "desc": "Names all six agents (advisor, auditor, quant, designer, worker, trader) and states when to reach for each, including that trader is scaffold-only with no live execution." },
     { "key": "states-llm-law", "weight": 1, "desc": "States that every model call routes through services/llm to local Claude Code and never a hosted inference API (not Anthropic's, not OpenAI's, not any provider's)." },
-    { "key": "actionable-for-a-cold-subagent", "weight": 2, "desc": "A subagent with zero other context could act on this immediately — dispatch the right agent, call the right CLI/MCP verb, invoke the right command — without re-reading the skill." }
+    { "key": "actionable-for-a-cold-subagent", "weight": 2, "desc": "A subagent with zero other context could act on this immediately -- dispatch the right agent, call the right CLI/MCP verb, invoke the right command -- without re-reading the skill." }
   ],
   "guidance": "Reward concrete, checkable orientation (tool names, verbs, agent handles) over generic paraphrase. Penalize a summary that describes the skill's existence without letting the reader act, drops or lumps together any of the six agents, mischaracterizes trader as capable of live execution, or omits/misstates the LLM-routing law."
 }

@@ -1,5 +1,5 @@
 ---
-title: Discovery — shepherd-to-myfi port map
+title: Discovery -- shepherd-to-myfi port map
 date: 2026-07-13
 discovery_id: D-HARVEST
 sprint: v0.0.0
@@ -31,19 +31,19 @@ time_used_minutes: 13
 | `hooks/scripts/dedup_write_guard.sh` | `PreToolUse(Write\|Edit)` blocks new public symbols duplicating an existing one, for the coder-equivalent role only | myfi's worker/quant write guard |
 | `hooks/scripts/coordinate_drive_guard.sh` | `Stop` backstop vs. passive-wait with idle teammates/unread mail, 2-nudge fail-open cap | only relevant once myfi has a teammate/conductor tier |
 | `agents/critic.md` | pre-hoc adversarial gate: `PROCEED/PROCEED WITH CHANGES/RECONSIDER/REJECT` | myfi advisor↔auditor pre-hoc pairing |
-| `agents/auditor.md` | post-hoc grading (A–F) + wave-review `PASS/REDO`; every finding = Hypothesis+Falsification+Confidence triple | myfi's existing `src/agents/auditor.md` — port the triple contract + grade rubric (currently thin) |
+| `agents/auditor.md` | post-hoc grading (A–F) + wave-review `PASS/REDO`; every finding = Hypothesis+Falsification+Confidence triple | myfi's existing `src/agents/auditor.md` -- port the triple contract + grade rubric (currently thin) |
 | `pipeline.md §Wave review + REDO` | `REDO` re-dispatches the **named** author on the **named** scope only, cap 3, then `REDO-CAP-EXCEEDED`→HARD-STOP | myfi advisor↔auditor REDO loop |
 
 Full 6 rows also written as `discovery_findings` rows (`shctx discovery insert --run=D-HARVEST`, ids 7-12, section=`port-map`).
 
 ## Open questions
 
-- myfi's `shctx` binary on `PATH` is shared with shepherd's install (not yet a vendored/forked copy) — whether myfi ports its own `myctx` package or continues depending on the shepherd-authored `shctx` long-term is an architecture decision for `@engineer`, not resolved by this read.
-- No `services/llm/tests/run.sh` equivalent exists yet in myfi — confirm the pytest gate lane before the eval harness lands (would block CLAUDE.md's "tests+evals every commit" rule).
+- myfi's `shctx` binary on `PATH` is shared with shepherd's install (not yet a vendored/forked copy) -- whether myfi ports its own `myctx` package or continues depending on the shepherd-authored `shctx` long-term is an architecture decision for `@engineer`, not resolved by this read.
+- No `services/llm/tests/run.sh` equivalent exists yet in myfi -- confirm the pytest gate lane before the eval harness lands (would block CLAUDE.md's "tests+evals every commit" rule).
 
 ## Confidence
 
-HIGH — every row above is a direct file read (paths cited), not inference.
+HIGH -- every row above is a direct file read (paths cited), not inference.
 
 ## Suggested follow-ups (optional)
 
@@ -52,8 +52,8 @@ HIGH — every row above is a direct file read (paths cited), not inference.
 ## PORT PRIORITY
 
 **Must-port for v0.0.0 foundation:**
-1. `services/llm/` + `services/eval/` — CLAUDE.md hard-requires local-Claude-Code-only + tests+evals every commit; nothing else can ship without this.
-2. `skills/context/` schema+migrations+scripts core (registry, dedup-check, adapt/audit tables) — everything else (adaptation, hooks, REDO) reads/writes this DB.
-3. `agents/auditor.md` triple-contract + `pipeline.md §Wave review + REDO` — myfi's advisor↔auditor pairing is dead weight without a real gate + bounded REDO loop.
+1. `services/llm/` + `services/eval/` -- CLAUDE.md hard-requires local-Claude-Code-only + tests+evals every commit; nothing else can ship without this.
+2. `skills/context/` schema+migrations+scripts core (registry, dedup-check, adapt/audit tables) -- everything else (adaptation, hooks, REDO) reads/writes this DB.
+3. `agents/auditor.md` triple-contract + `pipeline.md §Wave review + REDO` -- myfi's advisor↔auditor pairing is dead weight without a real gate + bounded REDO loop.
 
 **Can wait:** `coordinate_drive_guard.sh` and teammate-coordination hooks (myfi has no teammate/conductor tier yet); SOAK/SENTINEL (post-deploy remediation, premature pre-v1); full `## INSIGHTS` taxonomy capture hook (nice-to-have once adaptation's core 3-table loop is stable).

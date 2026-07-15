@@ -1,13 +1,13 @@
 {
   "kind": "trade",
-  "subject": "A trade idea or thesis produced by @quant/@trader — analysis and reasoning only, never a live order (the v0.0.0 trader is scaffold-only).",
+  "subject": "A trade idea or thesis produced by @quant/@trader -- analysis and reasoning only, never a live order (the v0.0.0 trader is scaffold-only).",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
     { "key": "thesis-clarity", "weight": 2, "desc": "States the trade thesis (why this position, why now) in one clear paragraph." },
     { "key": "risk-defined",   "weight": 2, "desc": "Names the specific risk to the thesis and what would invalidate it." },
-    { "key": "data-grounded",  "weight": 2, "desc": "Cites real price/market data via the toolkit — not a hallucinated setup." },
-    { "key": "no-live-exec",   "weight": 1, "desc": "Reads as analysis/recommendation only — never attempts to place or confirm a live order." }
+    { "key": "data-grounded",  "weight": 2, "desc": "Cites real price/market data via the toolkit -- not a hallucinated setup." },
+    { "key": "no-live-exec",   "weight": 1, "desc": "Reads as analysis/recommendation only -- never attempts to place or confirm a live order." }
   ],
   "guidance": "Reward a thesis-driven idea with a stated invalidation condition, grounded in real data. Penalize a thesis with no risk/invalidation stated, hallucinated price levels, and any language that attempts to execute or confirm a live trade rather than recommend one."
 }

@@ -1,11 +1,11 @@
 {
   "kind": "advisory",
-  "subject": "A financial advisory recommendation or report produced by the @advisor agent for a client — the assembled final output of a /myfi:analyze or /myfi:plan run.",
+  "subject": "A financial advisory recommendation or report produced by the @advisor agent for a client -- the assembled final output of a /myfi:analyze or /myfi:plan run.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
-    { "key": "actionable-recs", "weight": 2, "desc": "Concrete steps/goals a client could act on this week — not vague platitudes ('diversify more')." },
-    { "key": "data-grounded",   "weight": 2, "desc": "Cites real portfolio and market figures via the toolkit — not hallucinated numbers." },
+    { "key": "actionable-recs", "weight": 2, "desc": "Concrete steps/goals a client could act on this week -- not vague platitudes ('diversify more')." },
+    { "key": "data-grounded",   "weight": 2, "desc": "Cites real portfolio and market figures via the toolkit -- not hallucinated numbers." },
     { "key": "risk-disclosed",  "weight": 2, "desc": "Names the risk and uncertainty alongside the upside, not one-sided hype." },
     { "key": "client-clarity",  "weight": 1, "desc": "A non-expert client could read and act on it without translation." }
   ],

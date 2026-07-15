@@ -1,10 +1,10 @@
 {
   "kind": "taxes_workflow",
-  "subject": "The /myfi:taxes command pipeline's end-to-end output for one client's tax year — the filing-actionable summary produced AFTER the pipeline clears the @auditor compliance gate, distinct from a bare TAXES-skill answer to a single question (see taxes_knowledge.rubric.json). This rubric judges the full pipeline run, gate included.",
+  "subject": "The /myfi:taxes command pipeline's end-to-end output for one client's tax year -- the filing-actionable summary produced AFTER the pipeline clears the @auditor compliance gate, distinct from a bare TAXES-skill answer to a single question (see taxes_knowledge.rubric.json). This rubric judges the full pipeline run, gate included.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
-    { "key": "workflow-completeness", "weight": 2, "desc": "Walks the full pipeline end to end — gather, classify, route to forms, compute an estimate, name an optimization move, flag the filing deadline — not one isolated step passed off as the whole answer." },
+    { "key": "workflow-completeness", "weight": 2, "desc": "Walks the full pipeline end to end -- gather, classify, route to forms, compute an estimate, name an optimization move, flag the filing deadline -- not one isolated step passed off as the whole answer." },
     { "key": "compliance-aware",      "weight": 2, "desc": "Reflects that the @auditor compliance gate actually ran before the summary shipped: out-of-scope items are routed to a human rather than guessed, every numeric claim and form citation reads as checked, and the professional-review caveat is present, not merely tax-mechanically correct in isolation." }
   ],
   "guidance": "Reward a complete, gate-cleared pipeline output a preparer could act on immediately: real forms, a real estimate, a real deadline, and visible evidence the compliance pass ran (scope flags, professional-review caveat). Penalize a single-step answer standing in for the whole pipeline, an invented numeric threshold, a missing filing deadline, or no trace that a compliance/adversarial pass ever happened."

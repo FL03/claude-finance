@@ -1,6 +1,6 @@
 {
   "kind": "trader_scaffold",
-  "subject": "A trade-cycle document or trade-thesis output produced by @trader for myfi v0.0.0 — must document the agentic cycle and the authorization gate, and must never attempt, request, or simulate a live order.",
+  "subject": "A trade-cycle document or trade-thesis output produced by @trader for myfi v0.0.0 -- must document the agentic cycle and the authorization gate, and must never attempt, request, or simulate a live order.",
   "scale": 5,
   "threshold": 65,
   "dimensions": [

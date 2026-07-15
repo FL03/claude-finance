@@ -1,13 +1,13 @@
 {
   "kind": "plan",
-  "subject": "A financial plan produced by the /myfi:plan pipeline — goals, timeline, and concrete steps assembled from the flock's dispatch (advisor -> quant/auditor -> designer).",
+  "subject": "A financial plan produced by the /myfi:plan pipeline -- goals, timeline, and concrete steps assembled from the flock's dispatch (advisor -> quant/auditor -> designer).",
   "scale": 5,
   "threshold": 65,
   "dimensions": [
-    { "key": "goal-alignment", "weight": 2, "desc": "Ties every step back to the client's stated goal — not a generic template plan." },
+    { "key": "goal-alignment", "weight": 2, "desc": "Ties every step back to the client's stated goal -- not a generic template plan." },
     { "key": "actionability",  "weight": 2, "desc": "Each step is concrete enough to execute this week, not aspirational." },
     { "key": "feasibility",    "weight": 2, "desc": "Timeline and steps are realistic given the client's stated constraints." },
-    { "key": "completeness",   "weight": 1, "desc": "Covers the full horizon (near-term actions through the stated goal date) — no missing phase." }
+    { "key": "completeness",   "weight": 1, "desc": "Covers the full horizon (near-term actions through the stated goal date) -- no missing phase." }
   ],
   "guidance": "Reward a plan a client could start executing tomorrow, with every step traceable to their goal. Penalize generic advice-column plans, unrealistic timelines, and plans that stop at 'do more research' instead of naming the next concrete action."
 }
