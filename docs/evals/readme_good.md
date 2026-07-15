@@ -26,7 +26,7 @@ and `@designer` performs the final artifact pass once the gate clears.
 ## Install
 
 ```text
-/plugin marketplace add FL03/claude-finance
+/plugin marketplace add FL03/claude
 /plugin install myfi@fl03
 ```
 
