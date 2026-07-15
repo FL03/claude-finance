@@ -7,7 +7,7 @@ its bad golden scoring below threshold by a clear margin.
 The live lane runs the SAME goldens through a real local-Claude-Code judge:
   MYFI_EVAL_LIVE=1 bin/myfi-eval run --kind=advisory --input-file=agents/evals/advisor_good.md
   MYFI_EVAL_LIVE=1 bin/myfi-eval run --kind=quant_analysis --input-file=agents/evals/quant_good.md
-(and the matching *_bad.md files) — excluded from the gate lane because it spends real LLM calls.
+(and the matching *_bad.md files) -- excluded from the gate lane because it spends real LLM calls.
 stdlib unittest, mock seam, <2s. Mirrors services/eval/tests/test_skill_myfi_margin.py.
 """
 
@@ -41,7 +41,7 @@ myfi_eval = _load_eval_module()
 class _GoldenMarginMixin:
     """Shared mock-scoring machinery; subclasses set kind/golden filenames.
 
-    Deliberately NOT a ``unittest.TestCase`` subclass — unittest's loader collects every
+    Deliberately NOT a ``unittest.TestCase`` subclass -- unittest's loader collects every
     ``TestCase`` subclass in the module, and a bare mixin instantiated on its own has no
     ``kind``/``good_name``/``bad_name`` to read. Mixing this into a concrete ``TestCase``
     subclass (below) is what makes it collectible.

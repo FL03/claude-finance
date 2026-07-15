@@ -1,4 +1,4 @@
-"""MCP smoke test + the toolkit eval mock-lane margin — deterministic, <2s.
+"""MCP smoke test + the toolkit eval mock-lane margin -- deterministic, <2s.
 
 `test_list_tools_smoke` matches the v0.0.0 plan's [ACCEPTANCE]: the FastMCP
 server registers >=1 real tool with a non-empty name + description
@@ -29,7 +29,7 @@ _TESTS_DIR = Path(__file__).resolve().parent
 _RUBRIC_PATH = _TESTS_DIR.parent.parent / "eval" / "rubrics" / "toolkit.rubric.json"
 _EVALS_DIR = _TESTS_DIR / "evals"
 
-# Staged judge scores for the good/bad goldens below — stand in for a live
+# Staged judge scores for the good/bad goldens below -- stand in for a live
 # Claude Code judge call, matching the mock-seam contract services/llm/llm.py
 # (sibling unit) will implement: MYFI_LLM_MOCK_TEXT carries the judge's raw
 # response verbatim, short-circuiting the real model call.

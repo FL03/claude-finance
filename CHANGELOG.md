@@ -39,6 +39,9 @@ contradictions across the flock.
 - Content and correctness pass across the flock: agent, command, skill, and doc prose reconciled
   against the code and against each other (dropped internal "Wave N" codenames, aligned version
   phrasing, fixed cross-references).
+- House-style cleanup: converted em-dashes to the double-hyphen `--` across source docstrings,
+  tests, READMEs, `bin/` scripts, and `CLAUDE.md` (188 across 47 files). Eval goldens, rubrics, and
+  archival `.shepherd/` docs are deliberately left untouched to avoid perturbing scored content.
 
 ### Fixed
 
@@ -65,7 +68,7 @@ contradictions across the flock.
   `repository`, and `plugins[].source.repo` in `.claude-plugin/plugin.json` and
   `.claude-plugin/marketplace.json` to the new URL. The plugin and every tool keep the `myfi`
   identity (plugin name, `/myfi:*` commands, `bin/myfi-*`, the `myfi-toolkit` MCP server, the
-  `myfi_toolkit` package, the `.myfi/` registry) — only the repository name changed.
+  `myfi_toolkit` package, the `.myfi/` registry) -- only the repository name changed.
 - Reworked `.gitignore`.
 
 ## [0.0.0] - 2026-07-13

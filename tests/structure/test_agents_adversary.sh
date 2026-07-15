@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# W4-agents-adversary-editor structural gate — @auditor (compliance adversary) +
+# W4-agents-adversary-editor structural gate -- @auditor (compliance adversary) +
 # @designer (final artifact editor). Wraps the unit [ACCEPTANCE] predicate:
 # auditor carries the Hypothesis+Falsification+Confidence triple + REDO
 # verdicts; designer names its artifact/live-HTML duties; both have valid

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# W5-commands-analyze-plan structural gate — /myfi:analyze (single-shot) + /myfi:plan
+# W5-commands-analyze-plan structural gate -- /myfi:analyze (single-shot) + /myfi:plan
 # (advisor-led pipeline). Wraps the unit [ACCEPTANCE]: both command files present with valid
 # frontmatter, analyze names a report/artifact output, plan names the advisor pipeline. Also
 # checks the rubric + golden files this unit ships per [FILES]. Deterministic, python3/rg only,

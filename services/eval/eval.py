@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""services/eval/eval.py — the myfi eval harness.
+"""services/eval/eval.py -- the myfi eval harness.
 
 Scores a LATENT agent output (an advisor recommendation, a plan, a trade
 thesis, a skill's own orientation, …) against a rubric, using the
 local-Claude-Code judge in ``services/llm`` (see ``services/llm/llm.py``).
 This is the behavioral eval half of CLAUDE.md's "tests + evals, same commit"
-rule — the plugin's latent instructions get a real judge, not just
+rule -- the plugin's latent instructions get a real judge, not just
 gate-tested storage.
 
 The latent/deterministic split this plugin teaches, applied to itself:
@@ -16,7 +16,7 @@ The latent/deterministic split this plugin teaches, applied to itself:
                                  exit code. Same scores in => same verdict out.
 
 Pure + stateless: reads a rubric + an input, returns a verdict. It does not
-touch a DB — that is myctx's job (Wave 3) via a caller that resolves subjects
+touch a DB -- that is myctx's job (Wave 3) via a caller that resolves subjects
 and records verdicts. This stays a clean function so it is trivially testable
 with a mocked judge (``MYFI_LLM_MOCK``).
 
@@ -40,7 +40,7 @@ becomes plain ``json`` + arithmetic, with no external dependency.
   MYFI_EVAL_LLM    override path to the llm.py this shells to (default:
                    services/llm/llm.py next to this file's parent).
   MYFI_EVAL_LIVE   when "1", strips MYFI_LLM_MOCK / MYFI_LLM_MOCK_TEXT before
-                   shelling to llm.py — a stray mock from a parent shell must
+                   shelling to llm.py -- a stray mock from a parent shell must
                    not make the live judge lane a lie.
 """
 
@@ -154,7 +154,7 @@ def list_rubrics(rubric_dir: Path | None = None) -> list[tuple[str, str]]:
     return out
 
 
-# ── judge-prompt build (deterministic — reproducible from the rubric) ───────
+# ── judge-prompt build (deterministic -- reproducible from the rubric) ───────
 
 
 def build_judge_prompt(rubric: dict, item: str) -> tuple[str, str]:
@@ -169,7 +169,7 @@ def build_judge_prompt(rubric: dict, item: str) -> tuple[str, str]:
         "You are a strict, calibrated evaluation judge for the myfi plugin. "
         f"Score the SUBJECT against each rubric dimension on an integer scale of "
         f"1..{scale} (1=poor, {scale}=excellent). Use the full range and default LOW "
-        "when evidence is weak. Output ONLY a single JSON object and nothing else — "
+        "when evidence is weak. Output ONLY a single JSON object and nothing else -- "
         'no prose, no markdown fences. Shape: {"scores":{<dimension>:<int>,...},'
         '"rationale":"<=160 chars"}. '
         f"Include exactly these dimension keys: {keys}."
@@ -226,7 +226,7 @@ def compute_verdict(
     harness's jq arithmetic exactly rather than Python's round-half-to-even.
 
     Validates rubric structure first (a caller that built ``rubric`` by hand
-    rather than via ``load_rubric`` — e.g. a test — gets the same JudgeError
+    rather than via ``load_rubric`` -- e.g. a test -- gets the same JudgeError
     on a malformed shape, never a raw KeyError/ZeroDivisionError).
     """
     validate_rubric(rubric, kind)
@@ -252,7 +252,7 @@ def compute_verdict(
         raise JudgeError(f"dimension score out of range 1..{scale}: {', '.join(out_of_range)}")
 
     total_weight = sum(d["weight"] for d in dims)
-    if total_weight == 0:  # pragma: no cover — validate_rubric above already rejects this
+    if total_weight == 0:  # pragma: no cover -- validate_rubric above already rejects this
         raise JudgeError(f"rubric '{kind}' dimension weights sum to 0 (need at least one weight > 0)")
     weighted_sum = sum(scores[d["key"]] * d["weight"] for d in dims)
     overall = math.floor(100 * weighted_sum / (scale * total_weight) + 0.5)
@@ -269,7 +269,7 @@ def compute_verdict(
     }
 
 
-# ── the judge call (the only model seam — shells to services/llm/llm.py) ────
+# ── the judge call (the only model seam -- shells to services/llm/llm.py) ────
 
 
 def run_judge(
@@ -352,15 +352,15 @@ def _emit(result: dict, fmt: str) -> None:
     verdict = "PASS" if result["passed"] else "FAIL"
     if fmt == "md":
         print(
-            f"**EVAL `{result['kind']}`** — score **{result['overall']}/100** "
-            f"(threshold {result['threshold']}) — {verdict} · model `{result['model']}`\n"
+            f"**EVAL `{result['kind']}`** -- score **{result['overall']}/100** "
+            f"(threshold {result['threshold']}) -- {verdict} · model `{result['model']}`\n"
         )
         for key, value in result["scores"].items():
             print(f"- {key}: {value}/{result['scale']}")
         print(f"\n_{result['rationale']}_")
     else:
         print(
-            f"EVAL {result['kind']} — score={result['overall']}/100 "
+            f"EVAL {result['kind']} -- score={result['overall']}/100 "
             f"threshold={result['threshold']} {verdict}  model={result['model']}"
         )
         scored = "  ".join(f"{k}={v}/{result['scale']}" for k, v in result["scores"].items())

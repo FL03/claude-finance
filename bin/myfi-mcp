@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# bin/myfi-mcp — thin wrapper for the myfi_toolkit stdio MCP server.
+# bin/myfi-mcp -- thin wrapper for the myfi_toolkit stdio MCP server.
 #
 # Registered as the `myfi-toolkit` server in `.mcp.json`. Same poetry-run /
 # python-fallback pattern as `bin/myfi-toolkit` (discovery-packaging §3).

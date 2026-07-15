@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# W5-commands-taxes-trade structural gate — /myfi:taxes (tax-workflow pipeline) +
+# W5-commands-taxes-trade structural gate -- /myfi:taxes (tax-workflow pipeline) +
 # /myfi:trade (authorization-gate scaffold). Wraps the unit [ACCEPTANCE]: trade.md
 # halts-gate grep + no-live-order assertion, taxes.md valid frontmatter, plus the
 # regression test for the trade non-goal (seed §11's "no executable surface" rule

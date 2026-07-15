@@ -9,7 +9,7 @@ db = ".myfi/myfi.db"
 # global_db = "~/.myfi/global.db"
 
 [llm]
-# All model calls route through services/llm shelling to LOCAL Claude Code — never a hosted API.
+# All model calls route through services/llm shelling to LOCAL Claude Code -- never a hosted API.
 # `model` is the default the local Claude Code invocation requests.
 model = "claude-opus-4-8"
 

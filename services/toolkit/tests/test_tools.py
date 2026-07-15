@@ -1,9 +1,9 @@
-"""Gate tests for myfi_toolkit.tools — deterministic, mock-free, <2s.
+"""Gate tests for myfi_toolkit.tools -- deterministic, mock-free, <2s.
 
 `tools.py` is the declared single source of truth for the toolkit's capability
 surface (`CAPABILITIES`, `describe_toolkit()`), shared by the CLI's implicit
 self-description and the MCP `describe_toolkit` tool. It had no direct payload
-test before this file — the MCP smoke test only checked tool registration, not
+test before this file -- the MCP smoke test only checked tool registration, not
 the content of the payload itself.
 """
 

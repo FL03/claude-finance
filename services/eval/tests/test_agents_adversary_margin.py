@@ -9,7 +9,7 @@ The live lane runs the SAME goldens through a real local-Claude-Code judge:
       --input-file=agents/evals/auditor_good.md
   MYFI_EVAL_LIVE=1 bin/myfi-eval run --kind=designer_artifact \\
       --input-file=agents/evals/designer_good.md
-(and the corresponding *_bad.md goldens) — excluded from the gate because it
+(and the corresponding *_bad.md goldens) -- excluded from the gate because it
 spends LLM calls. stdlib unittest, mock seam, <2s. Mirrors
 services/eval/tests/test_skill_myfi_margin.py.
 """

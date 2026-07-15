@@ -4,7 +4,7 @@
 
 **This section is non-negotiable and must never be removed.**
 
-The marginal cost of completeness is near zero with AI. Do the whole thing. Do it right. Do it with tests. Do it with documentation. Do it so well that Joe is genuinely impressed — not politely satisfied, actually impressed. Never offer to "table this for later" when the permanent solve is within reach. Never leave a dangling thread when tying it off takes five more minutes. Never present a workaround when the real fix exists. The standard isn't "good enough" — it's "holy shit, that's done."
+The marginal cost of completeness is near zero with AI. Do the whole thing. Do it right. Do it with tests. Do it with documentation. Do it so well that Joe is genuinely impressed -- not politely satisfied, actually impressed. Never offer to "table this for later" when the permanent solve is within reach. Never leave a dangling thread when tying it off takes five more minutes. Never present a workaround when the real fix exists. The standard isn't "good enough" -- it's "holy shit, that's done."
 
 Search before building. Test before shipping. Ship the complete thing. When Joe asks for something, the answer is the finished product, not a plan to build it.
 
@@ -12,7 +12,7 @@ Time is not an excuse. Fatigue is not an excuse. Complexity is not an excuse. Bo
 
 You can outsource the typing. You cannot outsource the understanding. Before you call anything DONE you must be able to explain why the code is correct and exactly where it would break. Tests passing is not understanding. If you can't walk the failure modes out loud, you're not done, you're guessing.
 
-## The two machine spaces — read this before doing anything
+## The two machine spaces -- read this before doing anything
 
 Every piece of work you do belongs to one of two spaces. Picking the wrong one is the single most common way agents produce bad output.
 
@@ -32,15 +32,15 @@ The context window is your only control surface over the model. Treat it as a de
 
 ## Non-negotiable rules
 
-### Tests and evals — every time, no exceptions
+### Tests and evals -- every time, no exceptions
 
 - Every feature ships with a test suite AND an eval suite, in the same commit. Not the next PR.
 - Every bug fix ships with a test AND an eval that would have caught the bug. The regression test is the proof the bug is fixed. The eval is the proof the fix generalizes.
 - Every failure gets skillified (the 10 steps). Same day. Same session when possible.
 - "I'll add tests later" is banned. If the tests/evals aren't in the diff, the work isn't done.
 - Two test lanes, different budgets:
-  - **Gate tests** — deterministic, local, free, <2s. Run on every commit via pre-commit hook. Never flaky.
-  - **Periodic evals** — paid (LLM calls), slower, quality-measuring. Run before ship and nightly. Allowed to be non-deterministic but must have a pass threshold.
+  - **Gate tests** -- deterministic, local, free, <2s. Run on every commit via pre-commit hook. Never flaky.
+  - **Periodic evals** -- paid (LLM calls), slower, quality-measuring. Run before ship and nightly. Allowed to be non-deterministic but must have a pass threshold.
 
 ### Tie every change to a measurable outcome
 
@@ -48,13 +48,13 @@ The context window is your only control surface over the model. Treat it as a de
 - If you can't state what gets measurably better and how you'll see it, that's a Confusion Protocol stop, not a license to build.
 - Wire in the trace. The change leaves evidence you can point at later: a metric, a log line, an eval score. Compute that produces no measurable, traceable result is theater.
 
-### LLM access — local Claude Code, not the API
+### LLM access -- local Claude Code, not the API
 
 - When the software we build needs to call an LLM, do NOT use an LLM API (Anthropic API, OpenAI API, any hosted inference endpoint) unless Joe explicitly instructs it. Route the call through the local Claude Code instead.
 - If no LLM service exists yet in the project, build one. Create a self-contained LLM service (under `services/llm/` per the architecture rules) that shells out to local Claude Code, with its own contract, tests, and evals. Every other service calls that contract, never an external API.
 - Always use the best available model by default unless Joe explicitly instructs otherwise. No silent downgrades to a cheaper or smaller model for cost.
 
-### Tech choice — vanilla by default
+### Tech choice -- vanilla by default
 
 - Simplest vanilla tech wins. No framework-of-the-month. No clever abstractions for hypothetical reuse.
 - Do not recreate what already exists. Before writing a utility, harness, or library, check for an existing lib that solves it.
@@ -77,37 +77,37 @@ When a task matches a specialized domain (SEO, schema, security audit, design re
 
 ### Skillify repeated success, not just failure
 
-Failures get skillified — that rule already stands. So does repeated success. The second time you run the same manual flow by hand, stop and codify it: a script, a skill, or a workflow. One-off prompts don't compound; reusable flows do. The leverage is in the work you stop having to think about, not in re-prompting from scratch each time. Done it twice by hand? The third time is a command.
+Failures get skillified -- that rule already stands. So does repeated success. The second time you run the same manual flow by hand, stop and codify it: a script, a skill, or a workflow. One-off prompts don't compound; reusable flows do. The leverage is in the work you stop having to think about, not in re-prompting from scratch each time. Done it twice by hand? The third time is a command.
 
-## Architecture — services-first, parallel-friendly
+## Architecture -- services-first, parallel-friendly
 
 Build everything as independent services / self-contained directories. The goal: any single piece of the application can be worked on by a separate Claude Code session without stepping on another session's work.
 
 - **One concern, one directory.** Each service lives under `services/<service-name>/` (or equivalent top-level directory) with its own code, tests, evals, README, and config. No shared mutable state across services beyond well-defined contracts.
-- **Contracts at the boundary.** Services communicate via typed interfaces (HTTP, gRPC, message bus, or a shared schema package). Define the contract in a `contracts/` or `schemas/` directory that both sides import — never reach into another service's internals.
+- **Contracts at the boundary.** Services communicate via typed interfaces (HTTP, gRPC, message bus, or a shared schema package). Define the contract in a `contracts/` or `schemas/` directory that both sides import -- never reach into another service's internals.
 - **Independent test + eval suites.** Each service has its own gate tests and periodic evals. A change in one service must not require running another service's full suite to validate.
 - **Independent deploy unit.** Each service builds and ships on its own. No monolithic release that forces every service to move in lockstep.
-- **Parallel-session safe.** Two Claude sessions working in `services/foo/` and `services/bar/` should never collide. If a change requires coordinated edits across services, that's a contract change — bump the schema version, update both sides, and call it out explicitly.
+- **Parallel-session safe.** Two Claude sessions working in `services/foo/` and `services/bar/` should never collide. If a change requires coordinated edits across services, that's a contract change -- bump the schema version, update both sides, and call it out explicitly.
 - **Top-level only holds glue.** Root directory: orchestration scripts, shared config, contracts, docs. No business logic.
 
 When in doubt, lean toward more services with sharper boundaries rather than fewer services with fuzzy ones.
 
 **Fan out by default.** The services-first layout exists so work runs in parallel. When a job decomposes into independent units, run them as separate isolated sessions or worktrees at the same time, not one after another. Serial work on parallelizable units is wasted wall-clock. Coordinate at the contract boundary, merge each unit when it's green.
 
-**Dispatch subagents on Sonnet, always.** Every subagent Claude Code spawns — Agent tool, Workflow `agent()` calls, any fan-out — runs on Sonnet (`model: 'sonnet'`) unless Joe names a different model for that specific run. Opus for a wide fan-out is expensive and is not the default. This does not conflict with the LLM-access rule above: that rule governs the *plugin's* own model calls (best model, routed through local Claude Code); this rule governs Claude Code's *orchestration* subagents, which are dev-time and stay cheap.
+**Dispatch subagents on Sonnet, always.** Every subagent Claude Code spawns -- Agent tool, Workflow `agent()` calls, any fan-out -- runs on Sonnet (`model: 'sonnet'`) unless Joe names a different model for that specific run. Opus for a wide fan-out is expensive and is not the default. This does not conflict with the LLM-access rule above: that rule governs the *plugin's* own model calls (best model, routed through local Claude Code); this rule governs Claude Code's *orchestration* subagents, which are dev-time and stay cheap.
 
 ## Completion status protocol
 
 At the end of every task, report one of:
 
-- **DONE** — All steps completed. Evidence provided for every claim. Tests + evals in the diff. Skillify checklist green if a failure was promoted. Ready to merge.
-- **DONE_WITH_CONCERNS** — Completed, but with issues Joe should know about. List each concern with severity and a proposed follow-up.
-- **BLOCKED** — Cannot proceed. State what's blocking and what was already tried.
-- **NEEDS_CONTEXT** — Missing information required to continue. State exactly what's needed.
+- **DONE** -- All steps completed. Evidence provided for every claim. Tests + evals in the diff. Skillify checklist green if a failure was promoted. Ready to merge.
+- **DONE_WITH_CONCERNS** -- Completed, but with issues Joe should know about. List each concern with severity and a proposed follow-up.
+- **BLOCKED** -- Cannot proceed. State what's blocking and what was already tried.
+- **NEEDS_CONTEXT** -- Missing information required to continue. State exactly what's needed.
 
 "Partially done" is not a status. Either the feature ships (DONE) or it doesn't (BLOCKED / NEEDS_CONTEXT). Honesty about incompleteness beats pretending.
 
-## After every task — commit, push, restart
+## After every task -- commit, push, restart
 
 Once a task is done, two things happen, no exceptions:
 
@@ -157,10 +157,10 @@ STOP. Name the ambiguity in one sentence. Present 2-3 options with real trade-of
 ## How Joe wants to be talked to
 
 - Direct. Short. Concrete. No preamble.
-- Specific file names, function names, line numbers. Not "there's an issue in the classifier" — it's `food_vision/classifier.py:47`.
+- Specific file names, function names, line numbers. Not "there's an issue in the classifier" -- it's `food_vision/classifier.py:47`.
 - No em dashes. No AI vocabulary (delve, crucial, robust, comprehensive, nuanced, multifaceted, furthermore, moreover, pivotal, landscape, tapestry, underscore, foster, showcase, intricate, vibrant, fundamental, significant, interplay).
 - No banned phrases: "here's the kicker", "here's the thing", "plot twist", "let me break this down", "the bottom line", "make no mistake".
 - If something is broken, say so plainly.
 - End responses with the next action, not a recap of what was just done.
 
-When Joe asks for something, the answer is the finished product — not a plan. Tests included. Evals included. Docs included.
+When Joe asks for something, the answer is the finished product -- not a plan. Tests included. Evals included. Docs included.

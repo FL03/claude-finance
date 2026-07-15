@@ -1,8 +1,8 @@
-# services/toolkit — myfi_toolkit
+# services/toolkit -- myfi_toolkit
 
 The Python3/poetry core lib behind the myfi finance plugin's CLI and stdio MCP
 server. One package (`myfi_toolkit`), two console scripts, one shared tool
-layer — carries numpy/pandas/scipy/matplotlib, the per-project + optional
+layer -- carries numpy/pandas/scipy/matplotlib, the per-project + optional
 global SQLite registry (`myctx`, Wave 3), and the market-data adapter contract
 (`marketdata`, Wave 3).
 
@@ -12,7 +12,7 @@ global SQLite registry (`myctx`, Wave 3), and the market-data adapter contract
 services/toolkit/
 ├── pyproject.toml           poetry project: deps, dev-deps, console scripts
 ├── myfi_toolkit/
-│   ├── __init__.py          __version__ — single source of truth for semver
+│   ├── __init__.py          __version__ -- single source of truth for semver
 │   ├── cli.py                stdlib argparse dispatcher (fast-gate module)
 │   ├── mcp_server.py          FastMCP stdio server wiring
 │   ├── tools.py               tool implementations shared by cli.py + mcp_server.py
@@ -26,10 +26,10 @@ services/toolkit/
 
 ## The two entry points
 
-- `myfi-toolkit` → `myfi_toolkit.cli:main` — the CLI. Subcommands: `version`,
+- `myfi-toolkit` → `myfi_toolkit.cli:main` -- the CLI. Subcommands: `version`,
   `db <init|migrate|version> [--global]` (Wave 3), `quote <symbol>` (Wave 3),
   `stats` (numpy/pandas/scipy version summary).
-- `myfi-mcp` → `myfi_toolkit.mcp_server:main` — the stdio MCP server
+- `myfi-mcp` → `myfi_toolkit.mcp_server:main` -- the stdio MCP server
   (`FastMCP("myfi-toolkit")`), registered in the plugin root's `.mcp.json`.
   Exposes `describe_toolkit()`, returning the same capability payload the CLI
   is built from.
@@ -37,14 +37,14 @@ services/toolkit/
 Root-level wrappers (`bin/myfi-toolkit`, `bin/myfi-mcp`) run `poetry run` when
 poetry is on PATH, falling back to `python3 -m myfi_toolkit.<module>` on
 `PYTHONPATH` otherwise. `bin/myfi-venv-ensure` installs/refreshes this
-project's venv under `${CLAUDE_PLUGIN_DATA}` (idempotent — diffs
+project's venv under `${CLAUDE_PLUGIN_DATA}` (idempotent -- diffs
 `pyproject.toml` against a stored copy); the plugin's SessionStart hook calls
 it on every session start.
 
 ## Fast-gate discipline
 
 `myfi_toolkit.cli` MUST NOT top-level-import numpy/pandas/scipy/matplotlib/mcp
-— it is on the hot path of `bin/myfi-toolkit --version` and the CLI import
+-- it is on the hot path of `bin/myfi-toolkit --version` and the CLI import
 smoke test, both of which must stay under 2 seconds. Every subcommand handler
 that needs the heavy data stack (or the Wave-3 `myctx`/`marketdata`
 subpackages) imports it lazily, inside the function that needs it. Any code
@@ -56,7 +56,7 @@ that touches matplotlib must call `matplotlib.use("Agg")` before importing
 `poetry -C <dir>` changes the working directory the command resolves
 *before* it looks at any trailing path arguments (`poetry help run`), so
 paths passed to `pytest`/`ruff` below are already relative to
-`services/toolkit/` — do not re-prefix them with `services/toolkit/` or
+`services/toolkit/` -- do not re-prefix them with `services/toolkit/` or
 poetry will look for `services/toolkit/services/toolkit/...` and fail with
 exit 4 ("file or directory not found").
 
@@ -74,4 +74,4 @@ tests/test_cli.py tests/test_mcp_smoke.py`.
 Nothing in this package calls a hosted inference API directly. Any latent-quality
 scoring this toolkit's outputs go through (see `services/eval/rubrics/toolkit.rubric.json`)
 routes through `services/llm/llm.py`, which shells out to the local Claude
-Code CLI — never a hosted vendor endpoint (CLAUDE.md §LLM access).
+Code CLI -- never a hosted vendor endpoint (CLAUDE.md §LLM access).

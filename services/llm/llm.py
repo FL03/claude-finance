@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""services/llm/llm.py — the myfi LLM service.
+"""services/llm/llm.py -- the myfi LLM service.
 
 A self-contained service that routes every model call through the LOCAL Claude
 Code in headless print mode (``claude -p``). Per CLAUDE.md: the software we
-build never calls a hosted inference API — it shells out to the local Claude
+build never calls a hosted inference API -- it shells out to the local Claude
 Code. Every other service (services/eval, agents, commands, hooks) calls THIS
 contract, never ``claude`` directly, so there is exactly one place that owns
 the model invocation, the timeout, the model default, and the mock seam.
@@ -37,7 +37,7 @@ keyword argument, and is exact where the bash version was an approximation.
 ── Env ─────────────────────────────────────────────────────────────────────
   MYFI_LLM_BIN        claude binary (default: claude)
   MYFI_LLM_MODEL      default model alias, wins over .claude/myfi.toml's
-                       [llm].model (default: opus — best by default, per
+                       [llm].model (default: opus -- best by default, per
                        CLAUDE.md; never silently downgrade for cost). See
                        _default_model() -- the myfi.toml lookup is best-effort.
   MYFI_LLM_TIMEOUT    default timeout seconds (default: 120)
@@ -122,7 +122,7 @@ def _resolve_mock() -> str | None:
 
 
 def cmd_complete(args: argparse.Namespace) -> int:
-    # Mock short-circuits before resolving the prompt source at all — gate
+    # Mock short-circuits before resolving the prompt source at all -- gate
     # tests don't need a prompt to assert the harness around the call.
     try:
         mock = _resolve_mock()
@@ -199,7 +199,7 @@ def cmd_ping(_args: argparse.Namespace) -> int:
     except (OSError, subprocess.TimeoutExpired):
         pass
     model = _default_model()
-    print(f"{PROG}: claude reachable — {version}; default model={model}")
+    print(f"{PROG}: claude reachable -- {version}; default model={model}")
     return EXIT_OK
 
 
@@ -210,7 +210,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Env: MYFI_LLM_BIN (default claude) · MYFI_LLM_MODEL (default opus, or "
             "[llm].model in .claude/myfi.toml) · MYFI_LLM_TIMEOUT (default 120s)\n"
-            "     MYFI_LLM_MOCK=<file> / MYFI_LLM_MOCK_TEXT=<str> — return verbatim, "
+            "     MYFI_LLM_MOCK=<file> / MYFI_LLM_MOCK_TEXT=<str> -- return verbatim, "
             "short-circuiting the claude call.\n"
             "Exit: 0 ok · 2 usage · 3 timeout · 4 llm/runtime error"
         ),
@@ -230,7 +230,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=int(os.environ.get("MYFI_LLM_TIMEOUT", DEFAULT_TIMEOUT)),
     )
-    # A bare '-' explicitly marks stdin — identical to the default fallback,
+    # A bare '-' explicitly marks stdin -- identical to the default fallback,
     # accepted for parity with the ported bash contract.
     p_complete.add_argument("stdin_marker", nargs="?", default=None, help=argparse.SUPPRESS)
 

@@ -1,5 +1,5 @@
 """Gate: the mock seam returns the staged payload verbatim, and NEVER touches
-the claude binary — proved by pointing MYFI_LLM_BIN at a script that fails
+the claude binary -- proved by pointing MYFI_LLM_BIN at a script that fails
 loudly if it is ever invoked. stdlib unittest, <2s, no network, no real LLM.
 """
 

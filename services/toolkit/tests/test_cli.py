@@ -1,4 +1,4 @@
-"""Gate tests for myfi_toolkit.cli — deterministic, mock-free, <2s.
+"""Gate tests for myfi_toolkit.cli -- deterministic, mock-free, <2s.
 
 Exercises the argparse dispatcher directly against the two behaviors named in
 the v0.0.0 plan's [ACCEPTANCE] predicate for W2-toolkit-scaffold: `version`
@@ -42,7 +42,7 @@ def test_no_subcommand_exits_two() -> None:
 
 def test_stats_subcommand_registered() -> None:
     # Confirms the `stats` subcommand parses without invoking its handler
-    # (which lazy-imports numpy/pandas) — parser construction alone must stay
+    # (which lazy-imports numpy/pandas) -- parser construction alone must stay
     # on the fast, stdlib-only path.
     parser = cli.build_parser()
     args = parser.parse_args(["stats"])

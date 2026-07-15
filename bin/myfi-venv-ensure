@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# bin/myfi-venv-ensure — idempotent myfi_toolkit venv bootstrap.
+# bin/myfi-venv-ensure -- idempotent myfi_toolkit venv bootstrap.
 #
 # Installs/refreshes the myfi_toolkit poetry venv under ${CLAUDE_PLUGIN_DATA}
-# (survives plugin updates — unlike ${CLAUDE_PLUGIN_ROOT}, which gets purged
+# (survives plugin updates -- unlike ${CLAUDE_PLUGIN_ROOT}, which gets purged
 # ~7 days after an update per the packaging discovery). Diffs the bundled
 # services/toolkit/pyproject.toml against a copy stashed on the previous run
 # and only re-installs when it actually changed, so repeated calls (the Wave 6
@@ -37,7 +37,7 @@ if [ -f "$STAMP_FILE" ] && cmp -s "$PYPROJECT" "$STAMP_FILE"; then
 fi
 
 if ! command -v poetry >/dev/null 2>&1; then
-  echo "myfi-venv-ensure: poetry not found on PATH — skipping venv install (CLI/MCP wrappers fall back to python3 -m)" >&2
+  echo "myfi-venv-ensure: poetry not found on PATH -- skipping venv install (CLI/MCP wrappers fall back to python3 -m)" >&2
   exit 0
 fi
 
